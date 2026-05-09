@@ -67,9 +67,6 @@ export function OurStorySection() {
                   />
                 </Parallax>
               </div>
-              <figcaption className="absolute -left-7 top-6 origin-top-left -rotate-90 caps-track-tight text-[10px] text-ink/60 whitespace-nowrap">
-                Above · Maidenhead Spice · 117 Bridge Road
-              </figcaption>
             </figure>
           </Reveal>
         </div>

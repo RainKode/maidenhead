@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { AllWelcomeMark, DoubleRule } from "../ornaments";
+import { DoubleRule } from "../ornaments";
 
 /**
  * Hero — mirrors dishoom.com's signature scroll-driven scale-up.
@@ -89,10 +89,6 @@ export function HeroSection() {
             </blockquote>
           </div>
         </div>
-      </div>
-
-      <div className="relative z-10 -mt-10 md:-mt-14 flex flex-col items-center gap-6 pb-10 md:pb-16 px-6">
-        <AllWelcomeMark />
       </div>
 
       <div className="relative bg-cream pt-1">
