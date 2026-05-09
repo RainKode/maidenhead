@@ -1,0 +1,218 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+  Dishoom-inspired design tokens.
+  Palette: warm parchment cream, deep oxblood/maroon, saffron gold, soft ink.
+  Type: ornate display serif for headings, humanist body serif for prose.
+*/
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-cream: var(--cream);
+  --color-cream-deep: var(--cream-deep);
+  --color-oxblood: var(--oxblood);
+  --color-oxblood-dark: var(--oxblood-dark);
+  --color-saffron: var(--saffron);
+  --color-saffron-dark: var(--saffron-dark);
+  --color-ink: var(--ink);
+  --color-copper: var(--copper);
+
+  --font-sans: var(--font-body), "Lato", system-ui, sans-serif;
+  --font-display: var(--font-heading), "Merienda", cursive;
+  --font-mono: var(--font-mono), ui-monospace, monospace;
+  --font-heading: var(--font-display);
+
+  --text-sm: 0.707rem;
+  --text-base: 1rem;
+  --text-xl: 1.414rem;
+  --text-2xl: 1.999rem;
+  --text-3xl: 2.827rem;
+  --text-4xl: 3.997rem;
+  --text-5xl: 5.652rem;
+
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+}
+
+:root {
+  --cream: #ede9cf;
+  --cream-deep: #e3decb;
+  --oxblood: #2d3725;
+  --oxblood-dark: #1f2719;
+  --saffron: #d12e2e;
+  --saffron-dark: #a82424;
+  --ink: #040316;
+  --copper: #be692d;
+
+  --background: var(--cream);
+  --foreground: var(--ink);
+  --card: var(--cream-deep);
+  --card-foreground: var(--ink);
+  --popover: var(--cream);
+  --popover-foreground: var(--ink);
+  --primary: var(--oxblood);
+  --primary-foreground: var(--cream);
+  --secondary: var(--saffron);
+  --secondary-foreground: var(--oxblood-dark);
+  --muted: #e8e5d0;
+  --muted-foreground: #4a5240;
+  --accent: var(--copper);
+  --accent-foreground: var(--cream);
+  --destructive: #b91c1c;
+  --border: #c8c4a8;
+  --input: #dcd9c4;
+  --ring: var(--oxblood);
+  --radius: 0.25rem;
+}
+
+.dark {
+  --background: var(--oxblood-dark);
+  --foreground: var(--cream);
+  --card: var(--oxblood);
+  --card-foreground: var(--cream);
+  --popover: var(--oxblood-dark);
+  --popover-foreground: var(--cream);
+  --primary: var(--copper);
+  --primary-foreground: var(--cream);
+  --secondary: var(--cream);
+  --secondary-foreground: var(--oxblood-dark);
+  --muted: #2a3320;
+  --muted-foreground: #c8c4a8;
+  --accent: var(--copper);
+  --accent-foreground: var(--cream);
+  --destructive: #ef4444;
+  --border: oklch(1 0 0 / 14%);
+  --input: oklch(1 0 0 / 18%);
+  --ring: var(--copper);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    font-family: var(--font-sans);
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-sans);
+    font-weight: 400;
+    font-feature-settings: "liga" 1, "kern" 1;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    font-weight: 700;
+  }
+  ::selection {
+    background: var(--oxblood);
+    color: var(--cream);
+  }
+}
+
+@layer utilities {
+  .font-display { font-family: var(--font-heading); }
+  .font-body { font-family: var(--font-sans); }
+
+  .text-engraved {
+    text-shadow:
+      0 1px 0 oklch(1 0 0 / 0.25),
+      0 -1px 0 oklch(0 0 0 / 0.15);
+  }
+
+  .bg-grain {
+    background-image:
+      radial-gradient(oklch(0 0 0 / 0.03) 1px, transparent 1px),
+      radial-gradient(oklch(0 0 0 / 0.02) 1px, transparent 1px);
+    background-size: 3px 3px, 7px 7px;
+    background-position: 0 0, 1px 1px;
+  }
+
+  .link-rule {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-size: 100% 1px;
+    background-repeat: no-repeat;
+    background-position: 0 100%;
+    transition: background-size 200ms ease;
+  }
+  .link-rule:hover { background-size: 100% 2px; }
+
+  .caps-track { text-transform: uppercase; letter-spacing: 0.18em; }
+  .caps-track-tight { text-transform: uppercase; letter-spacing: 0.08em; }
+
+  .prose-legal h2 {
+    font-family: var(--font-heading);
+    font-size: 18px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--oxblood);
+    margin-top: 2.25rem;
+    margin-bottom: 0.75rem;
+  }
+  .prose-legal h3 {
+    font-family: var(--font-heading);
+    font-style: italic;
+    font-size: 19px;
+    color: var(--ink);
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+  .prose-legal p,
+  .prose-legal li {
+    font-size: 16px;
+    line-height: 1.75;
+    color: oklch(from var(--ink) l c h / 0.85);
+  }
+  .prose-legal p { margin-bottom: 1rem; }
+  .prose-legal ul,
+  .prose-legal ol {
+    margin: 1rem 0 1.25rem;
+    padding-left: 1.25rem;
+  }
+  .prose-legal ul { list-style: disc; }
+  .prose-legal ol { list-style: decimal; }
+  .prose-legal a {
+    color: var(--oxblood);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .prose-legal strong { color: var(--ink); font-weight: 600; }
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: marquee 55s linear infinite;
+}
+
+/* Pause on hover over the track */
+.marquee-track:hover .animate-marquee {
+  animation-play-state: paused;
+}
