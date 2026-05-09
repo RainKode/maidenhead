@@ -26,7 +26,7 @@ export function OffersSection() {
                 <span className="caps-track-tight text-[11px] text-saffron block">
                   Sunday Buffet
                 </span>
-                Adult £19.95 · Child (under 10) £12.95 · 12.00pm – 3.00pm.
+                Adult £14.95 · Child (under 10) £9.95 · 12.00pm – 2.00pm.
               </li>
               <li>
                 <span className="caps-track-tight text-[11px] text-saffron block">

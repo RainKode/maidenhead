@@ -24,13 +24,32 @@ const TIMES = [
   "22:30",
 ];
 
+function isoDate(offset = 0) {
+  const d = new Date();
+  d.setDate(d.getDate() + offset);
+  return d.toISOString().split("T")[0];
+}
+
+function friendlyDate(iso: string) {
+  const today = isoDate(0);
+  const tomorrow = isoDate(1);
+  if (iso === today) return "Today";
+  if (iso === tomorrow) return "Tomorrow";
+  return new Date(iso + "T00:00:00").toLocaleDateString("en-GB", {
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+  });
+}
+
 export function BookingForm() {
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState<string | null>(null);
   const [today, setToday] = useState("");
+  const [selectedDate, setSelectedDate] = useState("");
 
   useEffect(() => {
-    setToday(new Date().toISOString().split("T")[0]);
+    setToday(isoDate(0));
   }, []);
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -88,7 +107,39 @@ export function BookingForm() {
       </div>
       <Field label="Email" name="email" type="email" required />
       <div className="grid gap-4 sm:grid-cols-3">
-        <Field label="Date" name="date" type="date" required min={today} />
+        {/* Date with quick-pick buttons */}
+        <div className="flex flex-col gap-1.5">
+          <span className="caps-track-tight text-[10px] text-ink/60">Date *</span>
+          <div className="flex gap-1.5 mb-1">
+            {[0, 1, 2].map((offset) => {
+              const iso = today ? isoDate(offset) : "";
+              const label = offset === 0 ? "Today" : offset === 1 ? "Tomorrow" : iso ? friendlyDate(iso) : "";
+              return (
+                <button
+                  key={offset}
+                  type="button"
+                  onClick={() => setSelectedDate(iso)}
+                  className={`flex-1 h-8 rounded text-[10px] caps-track-tight border transition-colors ${
+                    selectedDate === iso && iso
+                      ? "bg-oxblood-dark text-cream border-oxblood-dark"
+                      : "border-ink/20 text-ink/60 hover:border-oxblood hover:text-oxblood"
+                  }`}
+                >
+                  {label}
+                </button>
+              );
+            })}
+          </div>
+          <input
+            type="date"
+            name="date"
+            required
+            min={today}
+            value={selectedDate}
+            onChange={(e) => setSelectedDate(e.target.value)}
+            className="bg-transparent border-0 border-b border-ink/25 px-0 h-10 text-[15px] text-ink focus:outline-none focus:border-oxblood"
+          />
+        </div>
         <label className="flex flex-col gap-1.5">
           <span className="caps-track-tight text-[10px] text-ink/60">Time</span>
           <select

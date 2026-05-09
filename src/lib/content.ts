@@ -28,15 +28,15 @@ export const contact = {
 export const hours = {
   summary: "Open 7 days a week, including Bank Holidays",
   dinner: "5.30pm – 10.30pm",
-  sundayBuffet: "Sunday Buffet · 12.00pm – 3.00pm",
+  sundayBuffet: "Sunday Buffet · 12.00pm – 2.00pm",
   weekly: [
     { day: "Monday", times: "5.30pm – 10.30pm" },
     { day: "Tuesday", times: "5.30pm – 10.30pm" },
-    { day: "Wednesday", times: "12.00pm – 2.00pm · 5.30pm – 10.30pm" },
-    { day: "Thursday", times: "12.00pm – 2.00pm · 5.30pm – 10.30pm" },
-    { day: "Friday", times: "5.30pm – 10.30pm" },
-    { day: "Saturday", times: "12.00pm – 2.00pm · 5.30pm – 10.30pm" },
-    { day: "Sunday", times: "12.00pm – 3.00pm · 5.30pm – 10.30pm" },
+    { day: "Wednesday", times: "5.30pm – 10.30pm" },
+    { day: "Thursday", times: "5.30pm – 10.30pm" },
+    { day: "Friday", times: "5.30pm – 11.00pm" },
+    { day: "Saturday", times: "5.30pm – 11.00pm" },
+    { day: "Sunday", times: "12.00pm – 2.00pm · 5.30pm – 10.30pm" },
   ],
 } as const;
 

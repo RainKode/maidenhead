@@ -39,9 +39,9 @@ export default function OffersPage() {
                 Sunday Buffet
               </h2>
               <p className="mt-4 font-display text-[20px] italic text-oxblood">
-                Adult £19.95 · Child (under 10) £12.95
+                Adult £14.95 · Child (under 10) £9.95
               </p>
-              <p className="mt-2 text-[15px] text-ink/75">12.00pm – 3.00pm</p>
+              <p className="mt-2 text-[15px] text-ink/75">12.00pm – 2.00pm</p>
               <p className="mt-5 text-[16px] text-ink/85 leading-[1.7]">
                 Two starters, four mains, rice, breads, salads and dessert —
                 a different lineup each week. Bring the family, take your
