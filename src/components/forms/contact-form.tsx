@@ -80,11 +80,20 @@ export function ContactForm() {
       >
         {status === "submitting" ? "Sending…" : "Send Message"}
       </button>
+      {/* Honeypot — hidden from humans, filled by bots */}
+      <input
+        type="text"
+        name="website"
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+        style={{ position: "absolute", left: "-9999px", opacity: 0, height: 0 }}
+      />
       {error ? (
         <p role="alert" className="text-[13px] text-destructive">
           {error}. Please email{" "}
-          <a href="mailto:info@maidenheadspice.com" className="link-rule">
-            info@maidenheadspice.com
+          <a href="mailto:info@maidenheadspice.co.uk" className="link-rule">
+            info@maidenheadspice.co.uk
           </a>{" "}
           instead.
         </p>

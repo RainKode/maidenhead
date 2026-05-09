@@ -19,7 +19,7 @@ export const contact = {
   region: "Berkshire",
   country: "United Kingdom",
   phones: ["01628 670670", "01628 673673"],
-  email: "info@maidenheadspice.com",
+  email: "info@maidenheadspice.co.uk",
   // Google Maps embed for 117 Bridge Road, Maidenhead.
   mapEmbed:
     "https://www.google.com/maps?q=Maidenhead+Spice,+117+Bridge+Road,+Maidenhead+SL6+8NA&output=embed",

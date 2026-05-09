@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 type Status = "idle" | "submitting" | "success" | "error";
 
@@ -27,6 +27,11 @@ const TIMES = [
 export function BookingForm() {
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState<string | null>(null);
+  const [today, setToday] = useState("");
+
+  useEffect(() => {
+    setToday(new Date().toISOString().split("T")[0]);
+  }, []);
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -83,7 +88,7 @@ export function BookingForm() {
       </div>
       <Field label="Email" name="email" type="email" required />
       <div className="grid gap-4 sm:grid-cols-3">
-        <Field label="Date" name="date" type="date" required />
+        <Field label="Date" name="date" type="date" required min={today} />
         <label className="flex flex-col gap-1.5">
           <span className="caps-track-tight text-[10px] text-ink/60">Time</span>
           <select
@@ -140,6 +145,16 @@ export function BookingForm() {
         {status === "submitting" ? "Sending…" : "Request Booking"}
       </button>
 
+      {/* Honeypot — hidden from humans, filled by bots */}
+      <input
+        type="text"
+        name="website"
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+        style={{ position: "absolute", left: "-9999px", opacity: 0, height: 0 }}
+      />
+
       {error ? (
         <p role="alert" className="text-[13px] text-destructive">
           {error}. Please call us on 01628 670670 instead.
@@ -154,11 +169,13 @@ function Field({
   name,
   type = "text",
   required,
+  min,
 }: {
   label: string;
   name: string;
   type?: string;
   required?: boolean;
+  min?: string;
 }) {
   return (
     <label className="flex flex-col gap-1.5">
@@ -170,6 +187,7 @@ function Field({
         type={type}
         name={name}
         required={required}
+        min={min}
         className="bg-transparent border-0 border-b border-ink/25 px-0 h-10 text-[15px] text-ink focus:outline-none focus:border-oxblood"
       />
     </label>

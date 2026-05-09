@@ -240,7 +240,7 @@ export default function PrivacyPage() {
         questions, or if you would like to make a complaint, please contact us
         via our{" "}
         <a href="/contact">contact page</a> or write to us at{" "}
-        <a href="mailto:info@maidenheadspice.com">info@maidenheadspice.com</a>
+        <a href="mailto:info@maidenheadspice.co.uk">info@maidenheadspice.co.uk</a>
         .
       </p>
     </LegalPage>
