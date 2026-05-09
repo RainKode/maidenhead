@@ -1,22 +1,16 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { SiteHeader } from "@/components/site-header";
-import { NewsletterFooter } from "@/components/sections/newsletter-footer";
+import { MenuBrowse } from "@/components/menu/menu-browse";
 import { PageHero } from "@/components/layout/page-hero";
+import { NewsletterFooter } from "@/components/sections/newsletter-footer";
+import { SiteHeader } from "@/components/site-header";
+import { menu, printableMenuPages } from "@/lib/menu-data";
 
 export const metadata: Metadata = {
   title: "Menus",
   description:
-    "Starters, slow-cooked curries, biryani, breads and our Sunday buffet — explore the Maidenhead Spice menu.",
+    "Browse the Maidenhead Spice menu, customise dishes and build an order for collection, delivery or dine-in pre-order.",
 };
-
-const menuPages = [
-  { label: "Page 1", href: "/menu/Maidenhead%20Spice%20Page%201.pdf" },
-  { label: "Page 2", href: "/menu/Maidenhead%20Spice%20Page%202.pdf" },
-  { label: "Page 3", href: "/menu/Maidenhead%20Spice%20Page%203.pdf" },
-  { label: "Page 4", href: "/menu/Maidenhead%20Spice%20Page%204.pdf" },
-  { label: "Page 5", href: "/menu/Maidenhead%20Spice%20Page%205.pdf" },
-];
 
 export default function MenusPage() {
   return (
@@ -26,61 +20,44 @@ export default function MenusPage() {
         <PageHero
           eyebrow="Maidenhead Spice"
           title="Our Menus"
-          subtitle="Browse our full menu below. Download any page or scroll through all five."
+          subtitle="Browse the full menu, customise your dishes and add favourites to your order."
         />
 
         <section className="bg-cream py-12 md:py-16">
-          <div className="mx-auto max-w-[900px] px-6 md:px-10 space-y-10">
-            {menuPages.map((page, i) => (
-              <div key={page.href} className="flex flex-col gap-3">
-                <div className="flex items-center justify-between">
-                  <h2 className="caps-track font-display text-[16px] text-oxblood-dark">
-                    Menu — {page.label}
-                  </h2>
+          <div className="mx-auto max-w-[1180px] px-6 md:px-10">
+            <MenuBrowse categories={menu} />
+
+            <div className="mt-14 border border-ink/10 bg-cream-deep px-6 py-8 text-center md:px-10">
+              <p className="caps-track text-[12px] text-oxblood">Printable menu</p>
+              <h2 className="mt-2 font-display text-[24px] text-ink">
+                Need a copy for the fridge?
+              </h2>
+              <div className="mt-5 flex flex-wrap justify-center gap-2">
+                {printableMenuPages.map((page) => (
                   <a
+                    key={page.href}
                     href={page.href}
                     download
-                    className="caps-track-tight text-[11px] font-semibold text-oxblood-dark border border-oxblood-dark/30 px-4 h-8 inline-flex items-center rounded-full hover:bg-oxblood-dark hover:text-cream transition-colors"
+                    className="caps-track-tight inline-flex h-9 items-center rounded-full border border-oxblood-dark/30 px-4 text-[11px] font-semibold text-oxblood-dark transition-colors hover:bg-oxblood-dark hover:text-cream"
                   >
-                    Download
+                    Download {page.label}
                   </a>
-                </div>
-                <div className="w-full border border-ink/10 overflow-hidden rounded-sm shadow-sm bg-white">
-                  <object
-                    data={page.href}
-                    type="application/pdf"
-                    className="w-full"
-                    style={{ height: "80vh" }}
-                    aria-label={`Maidenhead Spice menu ${page.label}`}
-                  >
-                    <div className="flex flex-col items-center justify-center py-16 text-ink/60 gap-4">
-                      <p className="text-[15px]">PDF preview not available in your browser.</p>
-                      <a
-                        href={page.href}
-                        download
-                        className="caps-track-tight text-[12px] font-semibold text-oxblood-dark border border-oxblood-dark/30 px-5 h-9 inline-flex items-center rounded-full hover:bg-oxblood-dark hover:text-cream transition-colors"
-                      >
-                        Download {page.label}
-                      </a>
-                    </div>
-                  </object>
-                </div>
+                ))}
               </div>
-            ))}
-
-            <div className="pt-4 flex flex-wrap items-center justify-center gap-3">
-              <Link
-                href="/book"
-                className="caps-track inline-flex items-center justify-center rounded-full bg-oxblood-dark px-7 h-11 text-[12px] font-semibold text-cream hover:bg-oxblood transition-colors"
-              >
-                Book a Table
-              </Link>
-              <Link
-                href="/order"
-                className="caps-track inline-flex items-center justify-center rounded-full border border-oxblood-dark px-7 h-11 text-[12px] font-semibold text-oxblood-dark hover:bg-oxblood-dark hover:text-cream transition-colors"
-              >
-                Order Online
-              </Link>
+              <div className="mt-7 flex flex-wrap justify-center gap-3">
+                <Link
+                  href="/book"
+                  className="caps-track inline-flex h-11 items-center justify-center rounded-full border border-oxblood-dark px-7 text-[12px] font-semibold text-oxblood-dark transition-colors hover:bg-oxblood-dark hover:text-cream"
+                >
+                  Book a Table
+                </Link>
+                <Link
+                  href="/order"
+                  className="caps-track inline-flex h-11 items-center justify-center rounded-full bg-oxblood-dark px-7 text-[12px] font-semibold text-cream transition-colors hover:bg-oxblood"
+                >
+                  Review Order
+                </Link>
+              </div>
             </div>
           </div>
         </section>

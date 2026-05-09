@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Merienda, Lato, Geist_Mono } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
+import { CartButton } from "@/components/cart/cart-button";
 import { CookieBanner } from "@/components/cookie-banner";
 import { siteInfo, contact } from "@/lib/content";
 
@@ -108,6 +109,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
         {children}
+        <CartButton />
         <CookieBanner />
         <Script
           id="ld-restaurant"

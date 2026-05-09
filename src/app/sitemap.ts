@@ -8,6 +8,7 @@ const ROUTES = [
   "/gallery",
   "/offers",
   "/order",
+  "/order/confirmed",
   "/book",
   "/reviews",
   "/contact",

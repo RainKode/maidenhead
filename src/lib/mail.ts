@@ -314,8 +314,200 @@ export function renderContactCustomerEmail(p: ContactPayload): { html: string; t
 }
 
 // ---------------------------------------------------------------------------
+// Order emails
+// ---------------------------------------------------------------------------
+
+export interface OrderEmailLine {
+  name: string;
+  variantLabel?: string;
+  modifiers: { label: string; priceDelta: number }[];
+  unitPrice: number;
+  qty: number;
+  notes?: string;
+}
+
+export interface OrderEmailPayload {
+  ref: string;
+  orderType: "collection" | "delivery" | "dine-in";
+  customer: {
+    name: string;
+    phone: string;
+    email: string;
+  };
+  requestedFor: {
+    date: string;
+    time: string;
+  };
+  delivery?: {
+    addressLine1: string;
+    postcode: string;
+    zone: string;
+  };
+  dineIn?: {
+    partySize: number;
+  };
+  notes?: string;
+  lines: OrderEmailLine[];
+  subtotal: number;
+  deliveryFee: number;
+  total: number;
+}
+
+export function renderOrderEmail({
+  order,
+  audience,
+}: {
+  order: OrderEmailPayload;
+  audience: "staff" | "customer";
+}): { html: string; text: string } {
+  const orderType = formatOrderType(order.orderType);
+  const requested = `${order.requestedFor.date} at ${order.requestedFor.time}`;
+  const total = formatMoney(order.total);
+
+  if (audience === "customer") {
+    const html = shell(`
+      <p style="font-size:15px;line-height:1.7;margin:0 0 16px;">Hi ${esc(order.customer.name)},</p>
+      <p style="font-size:15px;line-height:1.7;margin:0 0 16px;">
+        Thanks for ordering from Maidenhead Spice. Your ${esc(orderType.toLowerCase())}
+        request <strong>${esc(order.ref)}</strong> has landed safely with the kitchen.
+      </p>
+      <p style="font-size:15px;line-height:1.7;margin:0 0 20px;">
+        We will call you shortly on <strong>${esc(order.customer.phone)}</strong> to confirm the order,
+        timing and payment. Requested for <strong>${esc(requested)}</strong>.
+      </p>
+      ${orderLinesTable(order.lines)}
+      ${totalsTable(order)}
+      <p style="font-size:15px;line-height:1.7;margin:24px 0 0;">
+        For anything urgent, phone <a href="tel:01628670670" style="color:#7B1C2E;">01628 670670</a>.
+      </p>
+    `);
+
+    const text = [
+      `Hi ${order.customer.name},`,
+      "",
+      `Thanks for ordering from Maidenhead Spice. Your ${orderType.toLowerCase()} request ${order.ref} has landed safely with the kitchen.`,
+      `Requested for: ${requested}`,
+      `Total: ${total}`,
+      "",
+      orderLinesText(order.lines),
+      "",
+      "We will call shortly to confirm the order, timing and payment. For anything urgent, phone 01628 670670.",
+      "",
+      "- The team at Maidenhead Spice",
+    ].join("\n");
+
+    return { html, text };
+  }
+
+  const received = new Date().toLocaleString("en-GB", { timeZone: "Europe/London" });
+  const html = shell(`
+    <h2 style="margin:0 0 4px;font-size:20px;color:#7B1C2E;">New Order Request ${esc(order.ref)}</h2>
+    <p style="margin:0 0 24px;font-size:12px;color:#888;font-family:Arial,sans-serif;">Received ${esc(received)}</p>
+
+    <table cellpadding="0" cellspacing="0" style="width:100%;border-collapse:collapse;font-size:14px;font-family:Arial,sans-serif;">
+      ${row("Order type", orderType)}
+      ${row("Requested for", requested)}
+      ${row("Name", order.customer.name)}
+      ${row("Phone", order.customer.phone)}
+      ${row("Email", order.customer.email)}
+      ${order.delivery ? row("Delivery address", `${order.delivery.addressLine1}, ${order.delivery.postcode} (${order.delivery.zone})`) : ""}
+      ${order.dineIn ? row("Party size", String(order.dineIn.partySize)) : ""}
+      ${order.notes ? row("Order notes", order.notes) : ""}
+    </table>
+
+    ${orderLinesTable(order.lines)}
+    ${totalsTable(order)}
+  `);
+
+  const text = [
+    `NEW ORDER REQUEST ${order.ref}`,
+    `Received: ${received}`,
+    `Order type: ${orderType}`,
+    `Requested for: ${requested}`,
+    "",
+    `Name:  ${order.customer.name}`,
+    `Phone: ${order.customer.phone}`,
+    `Email: ${order.customer.email}`,
+    order.delivery ? `Delivery: ${order.delivery.addressLine1}, ${order.delivery.postcode} (${order.delivery.zone})` : "",
+    order.dineIn ? `Party size: ${order.dineIn.partySize}` : "",
+    order.notes ? `Notes: ${order.notes}` : "",
+    "",
+    orderLinesText(order.lines),
+    "",
+    `Subtotal: ${formatMoney(order.subtotal)}`,
+    `Delivery: ${formatMoney(order.deliveryFee)}`,
+    `Total: ${total}`,
+  ]
+    .filter(Boolean)
+    .join("\n");
+
+  return { html, text };
+}
+
+// ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
+
+function formatOrderType(orderType: OrderEmailPayload["orderType"]): string {
+  if (orderType === "dine-in") return "Dine-in pre-order";
+  return orderType.charAt(0).toUpperCase() + orderType.slice(1);
+}
+
+function formatMoney(amount: number): string {
+  return new Intl.NumberFormat("en-GB", { style: "currency", currency: "GBP" }).format(amount);
+}
+
+function orderLinesTable(lines: OrderEmailLine[]): string {
+  const rows = lines
+    .map((line) => {
+      const detail = [
+        line.variantLabel,
+        line.modifiers.map((modifier) => modifier.label).join(", "),
+        line.notes ? `Notes: ${line.notes}` : "",
+      ]
+        .filter((item): item is string => Boolean(item))
+        .map((item) => esc(item))
+        .join("<br />");
+      return `
+        <tr>
+          <td style="padding:10px 10px 10px 0;border-bottom:1px solid #f0eae4;vertical-align:top;">${esc(String(line.qty))}x</td>
+          <td style="padding:10px 10px 10px 0;border-bottom:1px solid #f0eae4;vertical-align:top;">
+            <strong>${esc(line.name)}</strong>${detail ? `<br /><span style="color:#666;font-size:12px;">${detail}</span>` : ""}
+          </td>
+          <td style="padding:10px 0;border-bottom:1px solid #f0eae4;text-align:right;vertical-align:top;white-space:nowrap;">${esc(formatMoney(line.unitPrice * line.qty))}</td>
+        </tr>`;
+    })
+    .join("");
+
+  return `
+    <table cellpadding="0" cellspacing="0" style="width:100%;border-collapse:collapse;margin-top:24px;font-size:14px;font-family:Arial,sans-serif;">
+      ${rows}
+    </table>`;
+}
+
+function totalsTable(order: OrderEmailPayload): string {
+  return `
+    <table cellpadding="0" cellspacing="0" style="width:100%;border-collapse:collapse;margin-top:16px;font-size:14px;font-family:Arial,sans-serif;">
+      ${row("Subtotal", formatMoney(order.subtotal))}
+      ${row("Delivery", formatMoney(order.deliveryFee))}
+      ${row("Total", formatMoney(order.total))}
+    </table>`;
+}
+
+function orderLinesText(lines: OrderEmailLine[]): string {
+  return lines
+    .map((line) => {
+      const detail = [
+        line.variantLabel,
+        line.modifiers.map((modifier) => modifier.label).join(", "),
+        line.notes ? `Notes: ${line.notes}` : "",
+      ]
+        .filter(Boolean)
+        .join("; ");
+      return `${line.qty}x ${line.name}${detail ? ` (${detail})` : ""} - ${formatMoney(line.unitPrice * line.qty)}`;
+    })
+    .join("\n");
+}
 
 function row(label: string, value: string): string {
   return `
