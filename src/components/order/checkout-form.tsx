@@ -145,7 +145,7 @@ export function CheckoutForm() {
   };
 
   return (
-    <section className="border border-ink/10 bg-cream-deep p-6 md:p-8">
+    <section className="brutal-card p-6 md:p-8">
       <p className="caps-track text-[12px] text-oxblood">Checkout</p>
       <h2 className="mt-3 font-display text-[26px] text-ink">Request your order</h2>
 
@@ -158,10 +158,10 @@ export function CheckoutForm() {
               onClick={() => setOrderType(type.id)}
               aria-pressed={orderType === type.id}
               className={cn(
-                "caps-track-tight h-11 border px-2 text-[10px] font-semibold transition-colors sm:text-[11px]",
+                "caps-track-tight h-11 border-[2px] px-2 text-[10px] font-bold transition-colors sm:text-[11px]",
                 orderType === type.id
-                  ? "border-oxblood-dark bg-oxblood-dark text-cream"
-                  : "border-ink/15 text-ink/70 hover:border-oxblood-dark"
+                  ? "border-ink bg-ink text-background"
+                  : "border-ink/30 text-ink/70 hover:border-ink"
               )}
             >
               {type.label}
@@ -185,14 +185,14 @@ export function CheckoutForm() {
               min={todayIso()}
               value={date}
               onChange={(event) => setDate(event.target.value)}
-              className="h-10 border-0 border-b border-ink/25 bg-transparent px-0 text-[15px] text-ink outline-none focus:border-oxblood"
+              className="h-10 border-0 border-b-[3px] border-ink bg-transparent px-0 text-[15px] text-ink outline-none focus:border-saffron"
             />
           </label>
           <TimeSlotPicker name="time" value={time} onChange={setTime} required />
         </div>
 
         {orderType === "delivery" ? (
-          <div className="grid gap-4 border-y border-ink/10 py-5">
+          <div className="grid gap-4 border-y-[3px] border-ink py-5">
             <Field label="Address line 1" name="addressLine1" required />
             <div className="grid gap-4 sm:grid-cols-2">
               <Field label="Postcode" name="postcode" required />
@@ -202,7 +202,7 @@ export function CheckoutForm() {
                   name="deliveryZone"
                   value={deliveryZone}
                   onChange={(event) => setDeliveryZone(event.target.value as DeliveryZone)}
-                  className="h-10 appearance-none border-0 border-b border-ink/25 bg-transparent px-0 text-[15px] text-ink outline-none focus:border-oxblood"
+                  className="h-10 appearance-none border-0 border-b-[3px] border-ink bg-transparent px-0 text-[15px] text-ink outline-none focus:border-saffron"
                 >
                   {deliveryZones.map((zone) => (
                     <option key={zone.id} value={zone.id}>
@@ -216,12 +216,12 @@ export function CheckoutForm() {
         ) : null}
 
         {orderType === "dine-in" ? (
-          <label className="flex flex-col gap-1.5 border-y border-ink/10 py-5">
-            <span className="caps-track-tight text-[10px] text-ink/60">Party size</span>
+          <label className="flex flex-col gap-1.5 border-y-[3px] border-ink py-5">
+            <span className="caps-track-tight text-[10px] font-bold text-ink uppercase tracking-[0.08em]">Party size</span>
             <select
               name="partySize"
               required
-              className="h-10 appearance-none border-0 border-b border-ink/25 bg-transparent px-0 text-[15px] text-ink outline-none focus:border-oxblood"
+              className="h-10 appearance-none border-0 border-b-[3px] border-ink bg-transparent px-0 text-[15px] text-ink outline-none focus:border-saffron"
             >
               <option value="">Choose...</option>
               {Array.from({ length: 12 }, (_, index) => index + 1).map((value) => (
@@ -234,12 +234,12 @@ export function CheckoutForm() {
         ) : null}
 
         <label className="flex flex-col gap-1.5">
-          <span className="caps-track-tight text-[10px] text-ink/60">Order notes</span>
+          <span className="caps-track-tight text-[10px] font-bold text-ink uppercase tracking-[0.08em]">Order notes</span>
           <textarea
             name="notes"
             rows={3}
             maxLength={400}
-            className="resize-none border border-ink/20 bg-transparent px-3 py-2 text-[15px] text-ink outline-none focus:border-oxblood"
+            className="resize-none border-[3px] border-ink bg-transparent px-3 py-2 text-[15px] text-ink outline-none focus:outline-[3px] focus:outline-saffron [box-shadow:var(--shadow-brutal-sm)]"
           />
         </label>
 
@@ -259,7 +259,7 @@ export function CheckoutForm() {
         <button
           type="submit"
           disabled={status === "submitting" || !lineCount || deliveryBlocked}
-          className="caps-track inline-flex h-12 items-center justify-center rounded-full bg-oxblood-dark px-7 text-[12px] font-semibold text-cream transition-colors hover:bg-oxblood disabled:cursor-not-allowed disabled:opacity-55"
+          className="caps-track inline-flex h-12 items-center justify-center border-[3px] border-ink bg-saffron px-7 text-[12px] font-bold text-ink [box-shadow:var(--shadow-brutal-sm)] hover:-translate-x-[1px] hover:-translate-y-[1px] transition-all disabled:cursor-not-allowed disabled:opacity-55"
         >
           {submitLabel}
         </button>
@@ -287,7 +287,7 @@ function Field({
 }) {
   return (
     <label className="flex flex-col gap-1.5">
-      <span className="caps-track-tight text-[10px] text-ink/60">
+      <span className="caps-track-tight text-[10px] font-bold text-ink uppercase tracking-[0.08em]">
         {label}
         {required ? " *" : ""}
       </span>
@@ -295,7 +295,7 @@ function Field({
         type={type}
         name={name}
         required={required}
-        className="h-10 border-0 border-b border-ink/25 bg-transparent px-0 text-[15px] text-ink outline-none focus:border-oxblood"
+        className="h-10 border-0 border-b-[3px] border-ink bg-transparent px-0 text-[15px] text-ink outline-none focus:border-saffron"
       />
     </label>
   );

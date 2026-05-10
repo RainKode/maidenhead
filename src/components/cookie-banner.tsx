@@ -41,7 +41,7 @@ export function CookieBanner() {
       aria-label="Cookie preferences"
       className="fixed inset-x-3 bottom-3 z-[60] md:inset-x-auto md:left-6 md:right-6 md:bottom-6"
     >
-      <div className="mx-auto max-w-[960px] rounded-md border border-oxblood-dark/15 bg-cream/95 backdrop-blur-md shadow-lg px-5 py-4 md:px-6 md:py-5 flex flex-col md:flex-row md:items-center gap-3 md:gap-6">
+      <div className="mx-auto max-w-[960px] brutal-card bg-background px-5 py-4 md:px-6 md:py-5 flex flex-col md:flex-row md:items-center gap-3 md:gap-6">
         <p className="text-[13px] md:text-[14px] text-ink/85 leading-relaxed">
           We use a few cookies to track usage and remember your preferences.
           See our{" "}
@@ -54,14 +54,14 @@ export function CookieBanner() {
           <button
             type="button"
             onClick={() => dismiss("declined")}
-            className="caps-track-tight text-[11px] font-semibold text-oxblood-dark/80 hover:text-oxblood px-3 h-9"
+            className="caps-track inline-flex h-9 items-center justify-center border-[3px] border-ink bg-background px-5 text-[11px] font-bold text-ink hover:bg-ink hover:text-background [box-shadow:var(--shadow-brutal-sm)] hover:-translate-x-[1px] hover:-translate-y-[1px] transition-all"
           >
             Decline
           </button>
           <button
             type="button"
             onClick={() => dismiss("accepted")}
-            className="caps-track inline-flex items-center justify-center rounded-full bg-oxblood-dark px-5 h-9 text-[11px] font-semibold text-cream hover:bg-oxblood transition-colors"
+            className="caps-track inline-flex h-9 items-center justify-center border-[3px] border-ink bg-ink px-5 text-[11px] font-bold text-background hover:bg-ink/85 [box-shadow:var(--shadow-brutal-sm)] hover:-translate-x-[1px] hover:-translate-y-[1px] transition-all"
           >
             Accept
           </button>

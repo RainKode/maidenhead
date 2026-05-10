@@ -72,7 +72,7 @@ export function MenuBrowse({ categories }: Props) {
 
   return (
     <div className="space-y-10">
-      <div className="sticky top-16 z-30 -mx-6 border-y border-ink/10 bg-cream/95 px-6 py-4 backdrop-blur md:top-[88px] md:-mx-10 md:px-10">
+      <div className="sticky top-16 z-30 -mx-6 border-y-[3px] border-ink bg-background/95 px-6 py-4 backdrop-blur md:top-[88px] md:-mx-10 md:px-10">
         <div className="mx-auto flex max-w-[1180px] flex-col gap-4">
           <div className="grid gap-3 lg:grid-cols-[minmax(220px,340px)_1fr] lg:items-center">
             <label className="relative block">
@@ -82,7 +82,7 @@ export function MenuBrowse({ categories }: Props) {
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
                 placeholder="Search dishes"
-                className="h-11 w-full rounded-full border border-ink/15 bg-cream-deep/70 pl-10 pr-4 text-[15px] text-ink outline-none transition-colors placeholder:text-ink/45 focus:border-oxblood"
+                className="h-11 w-full border-[3px] border-ink bg-background pl-10 pr-4 text-[15px] text-ink outline-none transition-colors placeholder:text-ink/45 focus:outline-[3px] focus:outline-saffron [box-shadow:var(--shadow-brutal-sm)]"
               />
             </label>
 
@@ -96,10 +96,10 @@ export function MenuBrowse({ categories }: Props) {
                     onClick={() => toggleFilter(filter)}
                     aria-pressed={selected}
                     className={cn(
-                      "caps-track-tight h-9 rounded-full border px-4 text-[11px] font-semibold transition-colors",
+                      "caps-track-tight h-9 border-[2px] px-4 text-[11px] font-bold transition-colors",
                       selected
-                        ? "border-oxblood-dark bg-oxblood-dark text-cream"
-                        : "border-oxblood-dark/25 text-oxblood-dark hover:border-oxblood-dark"
+                        ? "border-ink bg-ink text-background"
+                        : "border-ink/50 text-ink hover:border-ink"
                     )}
                   >
                     {filter}
@@ -114,7 +114,7 @@ export function MenuBrowse({ categories }: Props) {
               <a
                 key={category.slug}
                 href={`#${category.slug}`}
-                className="caps-track-tight inline-flex h-8 shrink-0 items-center rounded-full border border-ink/15 px-3 text-[10px] font-semibold text-ink/70 transition-colors hover:border-oxblood-dark hover:text-oxblood-dark"
+                className="caps-track-tight inline-flex h-8 shrink-0 items-center border-[2px] border-ink px-3 text-[10px] font-bold text-ink transition-colors hover:bg-ink hover:text-background"
               >
                 {category.title}
               </a>
@@ -132,7 +132,7 @@ export function MenuBrowse({ categories }: Props) {
           />
         ))
       ) : (
-        <div className="border border-ink/10 bg-cream-deep px-6 py-12 text-center">
+        <div className="brutal-card px-6 py-12 text-center">
           <p className="caps-track text-[12px] text-oxblood">No matches</p>
           <p className="mt-3 font-display text-[20px] text-ink">Try a different search or filter.</p>
         </div>
@@ -149,7 +149,7 @@ export function MenuBrowse({ categories }: Props) {
         <div
           role="status"
           aria-live="polite"
-          className="fixed bottom-5 left-1/2 z-50 -translate-x-1/2 rounded-full bg-oxblood-dark px-5 py-3 text-[13px] font-semibold text-cream shadow-lg"
+          className="fixed bottom-5 left-1/2 z-50 -translate-x-1/2 border-[3px] border-ink bg-ink px-5 py-3 text-[13px] font-bold text-background [box-shadow:var(--shadow-brutal)]"
         >
           Added {toast} to order
         </div>

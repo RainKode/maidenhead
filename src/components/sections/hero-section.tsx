@@ -47,7 +47,7 @@ export function HeroSection() {
   const overlay = 0.15 + 0.45 * eased; // dim grows as it fills
 
   return (
-    <section className="relative bg-oxblood-dark text-cream">
+    <section className="relative bg-ink text-background">
       <div ref={wrapRef} className="relative h-[160vh]">
         <div className="sticky top-0 h-screen w-full overflow-hidden bg-[rgb(21,21,21)]">
           <div
@@ -91,8 +91,9 @@ export function HeroSection() {
         </div>
       </div>
 
-      <div className="relative bg-cream pt-1">
-        <div className="mx-auto max-w-[1240px] px-6 md:px-10 pt-2 text-oxblood-dark">
+      <div className="relative bg-background pt-1">
+        <div
+          className="mx-auto max-w-[1240px] px-6 md:px-10 pt-2 text-ink">
           <DoubleRule />
         </div>
       </div>

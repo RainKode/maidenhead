@@ -33,7 +33,7 @@ export function ConfirmedSummary({ refFromQuery }: { refFromQuery?: string }) {
   const ref = refFromQuery ?? order?.ref;
 
   return (
-    <div className="mx-auto max-w-[760px] border border-ink/10 bg-cream-deep px-6 py-10 text-center md:px-10">
+    <div className="mx-auto max-w-[760px] brutal-card px-6 py-10 text-center md:px-10">
       <p className="caps-track text-[12px] text-oxblood">Thank you</p>
       <h1 className="mt-3 font-display text-[32px] text-ink md:text-[40px]">
         We have received your order request
@@ -48,8 +48,8 @@ export function ConfirmedSummary({ refFromQuery }: { refFromQuery?: string }) {
       </p>
 
       {order ? (
-        <div className="mt-8 border border-ink/10 bg-cream p-5 text-left">
-          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-ink/10 pb-4">
+        <div className="mt-8 brutal-card-sm p-5 text-left">
+          <div className="flex flex-wrap items-center justify-between gap-3 brutal-divider pb-4">
             <div>
               <p className="caps-track-tight text-[10px] text-ink/55">Order type</p>
               <p className="font-display text-[18px] capitalize text-ink">{order.orderType.replace("-", " ")}</p>
@@ -72,7 +72,7 @@ export function ConfirmedSummary({ refFromQuery }: { refFromQuery?: string }) {
               </li>
             ))}
           </ul>
-          <div className="mt-5 flex justify-between border-t border-ink/10 pt-4 font-display text-[20px] text-ink">
+          <div className="mt-5 flex justify-between brutal-divider pt-4 font-display text-[20px] text-ink">
             <span>Total</span>
             <span>{formatPrice(order.total)}</span>
           </div>

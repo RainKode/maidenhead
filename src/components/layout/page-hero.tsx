@@ -1,5 +1,3 @@
-import { DoubleRule } from "../ornaments";
-
 type PageHeroProps = {
   eyebrow?: string;
   title: string;
@@ -23,8 +21,8 @@ export function PageHero({
     <section
       className={
         isOx
-          ? "bg-oxblood-dark text-cream py-20 md:py-28 border-b border-cream/10"
-          : "bg-cream text-ink py-20 md:py-28 border-b border-ink/10"
+          ? "bg-ink text-background py-20 md:py-28 border-b-[3px] border-saffron"
+          : "bg-background text-ink py-20 md:py-28 border-b-[3px] border-ink"
       }
     >
       <div className="mx-auto max-w-[1100px] px-6 md:px-10 text-center">
@@ -42,7 +40,7 @@ export function PageHero({
         <h1
           className={
             "mt-4 font-display text-[34px] md:text-[52px] lg:text-[60px] leading-[1.05] uppercase tracking-[0.03em] " +
-            (isOx ? "text-cream" : "text-ink")
+            (isOx ? "text-background" : "text-ink")
           }
         >
           {title}
@@ -51,19 +49,13 @@ export function PageHero({
           <p
             className={
               "mt-6 mx-auto max-w-2xl font-body italic text-[18px] md:text-[20px] " +
-              (isOx ? "text-cream/85" : "text-ink/80")
+              (isOx ? "text-background/85" : "text-ink/80")
             }
           >
             {subtitle}
           </p>
         ) : null}
-        <div
-          className={
-            "mx-auto mt-10 w-24 " + (isOx ? "text-cream/60" : "text-oxblood/70")
-          }
-        >
-          <DoubleRule />
-        </div>
+        <div className="brutal-divider mx-auto mt-10" />
       </div>
     </section>
   );

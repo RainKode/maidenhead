@@ -50,11 +50,11 @@ export function CartDrawer({ open, onOpenChange }: Props) {
         aria-modal="true"
         aria-label="Your order"
         className={cn(
-          "absolute right-0 top-0 flex h-full w-[min(420px,100vw)] flex-col bg-cream shadow-2xl transition-transform duration-300",
+          "absolute right-0 top-0 flex h-full w-[min(420px,100vw)] flex-col bg-background border-l-[4px] border-ink transition-transform duration-300",
           open ? "translate-x-0" : "translate-x-full"
         )}
       >
-        <div className="flex items-start justify-between gap-4 border-b border-ink/10 px-5 py-5">
+        <div className="flex items-start justify-between gap-4 border-b-[3px] border-ink px-5 py-5">
           <div>
             <p className="caps-track text-[11px] text-oxblood">Your order</p>
             <h2 className="mt-1 font-display text-[24px] text-ink">
@@ -65,7 +65,7 @@ export function CartDrawer({ open, onOpenChange }: Props) {
             type="button"
             onClick={() => onOpenChange(false)}
             aria-label="Close"
-            className="inline-flex size-10 items-center justify-center rounded-full border border-ink/15 text-ink/70 hover:border-oxblood-dark hover:text-oxblood-dark"
+            className="inline-flex size-10 items-center justify-center border-[3px] border-ink text-ink hover:bg-ink hover:text-background transition-colors"
           >
             <X className="size-5" strokeWidth={1.5} />
           </button>
@@ -84,12 +84,12 @@ export function CartDrawer({ open, onOpenChange }: Props) {
               ))}
             </ul>
           ) : (
-            <div className="border border-ink/10 bg-cream-deep px-5 py-8 text-center">
+            <div className="brutal-card px-5 py-8 text-center">
               <p className="font-display text-[20px] text-ink">Nothing in the cart yet.</p>
               <Link
                 href="/menus"
                 onClick={() => onOpenChange(false)}
-                className="mt-5 inline-flex h-10 items-center justify-center rounded-full bg-oxblood-dark px-5 text-[11px] font-semibold uppercase tracking-[0.12em] text-cream hover:bg-oxblood"
+                className="mt-5 inline-flex h-10 items-center justify-center border-[3px] border-ink bg-ink px-5 text-[11px] font-bold uppercase tracking-[0.12em] text-background hover:bg-ink/90 [box-shadow:var(--shadow-brutal-sm)] hover:-translate-x-[1px] hover:-translate-y-[1px] transition-all"
               >
                 Browse the Menu
               </Link>
@@ -97,7 +97,7 @@ export function CartDrawer({ open, onOpenChange }: Props) {
           )}
         </div>
 
-        <div className="border-t border-ink/10 px-5 py-5">
+        <div className="border-t-[3px] border-ink bg-saffron px-5 py-5">
           <div className="flex items-center justify-between font-display text-[20px] text-ink">
             <span>Subtotal</span>
             <span>{formatPrice(subtotal)}</span>
@@ -106,10 +106,10 @@ export function CartDrawer({ open, onOpenChange }: Props) {
             href="/order"
             onClick={() => onOpenChange(false)}
             className={cn(
-              "caps-track mt-5 flex h-12 items-center justify-center rounded-full px-6 text-[12px] font-semibold transition-colors",
+              "caps-track mt-5 flex h-12 items-center justify-center border-[3px] border-ink px-6 text-[12px] font-bold transition-all [box-shadow:var(--shadow-brutal-sm)] hover:-translate-x-[1px] hover:-translate-y-[1px] active:translate-x-[3px] active:translate-y-[3px] active:[box-shadow:none]",
               lines.length
-                ? "bg-oxblood-dark text-cream hover:bg-oxblood"
-                : "pointer-events-none bg-ink/10 text-ink/40"
+                ? "bg-ink text-background"
+                : "pointer-events-none bg-ink/10 text-ink/40 shadow-none"
             )}
           >
             Checkout
@@ -130,7 +130,7 @@ function CartDrawerLine({
   onRemove: () => void;
 }) {
   return (
-    <li className="border border-ink/10 bg-cream-deep p-4">
+    <li className="brutal-card-sm p-4">
       <div className="flex items-start justify-between gap-3">
         <div>
           <p className="font-display text-[17px] text-ink">{line.name}</p>
@@ -148,19 +148,19 @@ function CartDrawerLine({
           type="button"
           onClick={onRemove}
           aria-label={`Remove ${line.name}`}
-          className="inline-flex size-8 shrink-0 items-center justify-center rounded-full text-ink/55 hover:bg-cream hover:text-destructive"
+          className="inline-flex size-8 shrink-0 items-center justify-center border-[2px] border-ink text-ink hover:bg-ink hover:text-background transition-colors"
         >
           <Trash2 className="size-4" strokeWidth={1.5} />
         </button>
       </div>
 
       <div className="mt-4 flex items-center justify-between gap-4">
-        <div className="flex h-9 items-center border border-ink/15 bg-cream px-1">
+        <div className="flex h-9 items-center border-[3px] border-ink bg-background px-1">
           <button
             type="button"
             onClick={() => onQtyChange(line.qty - 1)}
             aria-label={`Decrease ${line.name}`}
-            className="inline-flex size-7 items-center justify-center rounded-full text-ink/70 hover:bg-cream-deep"
+            className="inline-flex size-7 items-center justify-center border-r-[2px] border-ink text-ink hover:bg-ink hover:text-background transition-colors"
           >
             <Minus className="size-3.5" />
           </button>
@@ -169,12 +169,12 @@ function CartDrawerLine({
             type="button"
             onClick={() => onQtyChange(line.qty + 1)}
             aria-label={`Increase ${line.name}`}
-            className="inline-flex size-7 items-center justify-center rounded-full text-ink/70 hover:bg-cream-deep"
+            className="inline-flex size-7 items-center justify-center border-l-[2px] border-ink text-ink hover:bg-ink hover:text-background transition-colors"
           >
             <Plus className="size-3.5" />
           </button>
         </div>
-        <span className="font-display text-[17px] text-oxblood-dark">
+        <span className="font-display text-[17px] text-ink">
           {formatPrice(line.unitPrice * line.qty)}
         </span>
       </div>

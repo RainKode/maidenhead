@@ -52,7 +52,7 @@ export function MasonryLightboxGallery({ images }: Props) {
             key={img.src}
             type="button"
             onClick={() => setActiveIndex(i)}
-            className="relative mb-3 md:mb-4 block w-full break-inside-avoid overflow-hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-oxblood"
+            className="relative mb-3 md:mb-4 block w-full break-inside-avoid overflow-hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-ink brutal-frame"
           >
             <Image
               src={img.src}
@@ -78,14 +78,14 @@ export function MasonryLightboxGallery({ images }: Props) {
           role="dialog"
           aria-modal="true"
           aria-label={active.alt}
-          className="fixed inset-0 z-[80] bg-oxblood-dark/95 backdrop-blur-sm flex items-center justify-center p-4 md:p-10"
+          className="fixed inset-0 z-[80] bg-ink/95 flex items-center justify-center p-4 md:p-10"
           onClick={close}
         >
           <button
             type="button"
             aria-label="Close"
             onClick={close}
-            className="absolute top-4 right-4 md:top-6 md:right-6 inline-flex size-10 items-center justify-center rounded-full bg-cream/10 hover:bg-cream/25 text-cream transition-colors"
+            className="absolute top-4 right-4 md:top-6 md:right-6 inline-flex size-10 items-center justify-center border-[3px] border-background bg-ink text-background hover:bg-background hover:text-ink transition-colors"
           >
             <X className="size-5" strokeWidth={1.5} />
           </button>
@@ -96,7 +96,7 @@ export function MasonryLightboxGallery({ images }: Props) {
               e.stopPropagation();
               prev();
             }}
-            className="absolute left-3 md:left-8 inline-flex size-12 items-center justify-center rounded-full bg-cream/10 hover:bg-cream/25 text-cream transition-colors"
+            className="absolute left-3 md:left-8 inline-flex size-12 items-center justify-center border-[3px] border-background bg-ink text-background hover:bg-background hover:text-ink transition-colors"
           >
             <ChevronLeft className="size-6" strokeWidth={1.5} />
           </button>
@@ -107,7 +107,7 @@ export function MasonryLightboxGallery({ images }: Props) {
               e.stopPropagation();
               next();
             }}
-            className="absolute right-3 md:right-8 inline-flex size-12 items-center justify-center rounded-full bg-cream/10 hover:bg-cream/25 text-cream transition-colors"
+            className="absolute right-3 md:right-8 inline-flex size-12 items-center justify-center border-[3px] border-background bg-ink text-background hover:bg-background hover:text-ink transition-colors"
           >
             <ChevronRight className="size-6" strokeWidth={1.5} />
           </button>

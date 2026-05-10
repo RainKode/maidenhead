@@ -29,22 +29,28 @@ export const orderTimeSlots = [
 
 export function TimeSlotPicker({ name, value, onChange, required }: Props) {
   return (
-    <label className="flex flex-col gap-1.5">
-      <span className="caps-track-tight text-[10px] text-ink/60">Time</span>
-      <select
-        name={name}
-        value={value}
-        required={required}
-        onChange={(event) => onChange(event.target.value)}
-        className="h-10 appearance-none border-0 border-b border-ink/25 bg-transparent px-0 text-[15px] text-ink outline-none focus:border-oxblood"
-      >
-        <option value="">Choose...</option>
+    <fieldset className="flex flex-col gap-1.5">
+      <legend className="caps-track-tight text-[10px] font-bold text-ink uppercase tracking-[0.08em]">
+        Time{required ? " *" : ""}
+      </legend>
+      <input type="hidden" name={name} value={value} />
+      <div className="grid grid-cols-4 gap-1.5 mt-1">
         {orderTimeSlots.map((slot) => (
-          <option key={slot} value={slot}>
+          <button
+            key={slot}
+            type="button"
+            onClick={() => onChange(slot)}
+            aria-pressed={value === slot}
+            className={
+              value === slot
+                ? "h-8 border-[2px] border-ink bg-ink text-background text-[11px] font-bold transition-colors"
+                : "h-8 border-[2px] border-ink/40 text-ink/70 text-[11px] hover:border-ink hover:text-ink transition-colors"
+            }
+          >
             {slot}
-          </option>
+          </button>
         ))}
-      </select>
-    </label>
+      </div>
+    </fieldset>
   );
 }

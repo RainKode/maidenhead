@@ -110,9 +110,9 @@ export function DishCustomiser({ dish, open, onClose, onAdded }: Props) {
     <dialog
       ref={dialogRef}
       onClose={onClose}
-      className="m-auto w-[min(720px,calc(100vw-24px))] max-h-[calc(100vh-24px)] overflow-y-auto bg-cream p-0 text-ink shadow-2xl backdrop:bg-ink/65"
+      className="m-auto w-[min(720px,calc(100vw-24px))] max-h-[calc(100vh-24px)] overflow-y-auto bg-background p-0 text-ink border-[4px] border-ink [box-shadow:var(--shadow-brutal-lg)] backdrop:bg-ink/70"
     >
-      <div className="sticky top-0 z-10 flex items-start justify-between gap-4 border-b border-ink/10 bg-cream px-5 py-4 md:px-7">
+      <div className="sticky top-0 z-10 flex items-start justify-between gap-4 border-b-[3px] border-ink bg-background px-5 py-4 md:px-7">
         <div>
           <p className="caps-track text-[11px] text-oxblood">Customise dish</p>
           <h2 className="mt-1 font-display text-[24px] text-ink">{dish.name}</h2>
@@ -121,7 +121,7 @@ export function DishCustomiser({ dish, open, onClose, onAdded }: Props) {
           type="button"
           onClick={onClose}
           aria-label="Close"
-          className="inline-flex size-10 shrink-0 items-center justify-center rounded-full border border-ink/15 text-ink/70 hover:border-oxblood-dark hover:text-oxblood-dark"
+          className="inline-flex size-10 shrink-0 items-center justify-center border-[3px] border-ink text-ink hover:bg-ink hover:text-background transition-colors"
         >
           <X className="size-5" strokeWidth={1.5} />
         </button>
@@ -142,10 +142,10 @@ export function DishCustomiser({ dish, open, onClose, onAdded }: Props) {
                 <label
                   key={variant.id}
                   className={cn(
-                    "flex cursor-pointer items-center justify-between gap-3 border px-4 py-3 transition-colors",
+                    "flex cursor-pointer items-center justify-between gap-3 border-[3px] px-4 py-3 transition-colors",
                     variantId === variant.id
-                      ? "border-oxblood-dark bg-cream-deep"
-                      : "border-ink/12 hover:border-oxblood-dark/40"
+                      ? "border-ink bg-ink text-background"
+                      : "border-ink/30 hover:border-ink"
                   )}
                 >
                   <span className="flex items-center gap-3 text-[14px] font-semibold text-ink">
@@ -179,10 +179,10 @@ export function DishCustomiser({ dish, open, onClose, onAdded }: Props) {
                   <label
                     key={option.id}
                     className={cn(
-                      "flex cursor-pointer items-center justify-between gap-3 border px-4 py-3 transition-colors",
+                      "flex cursor-pointer items-center justify-between gap-3 border-[3px] px-4 py-3 transition-colors",
                       selected
-                        ? "border-oxblood-dark bg-cream-deep"
-                        : "border-ink/12 hover:border-oxblood-dark/40"
+                        ? "border-ink bg-ink text-background"
+                        : "border-ink/30 hover:border-ink"
                     )}
                   >
                     <span className="flex items-center gap-3 text-[14px] font-semibold text-ink">
@@ -212,12 +212,12 @@ export function DishCustomiser({ dish, open, onClose, onAdded }: Props) {
             <span className="caps-track-tight text-[11px] font-semibold text-oxblood-dark">
               Quantity
             </span>
-            <div className="mt-3 flex h-11 w-36 items-center justify-between border border-ink/15 bg-cream-deep px-2">
+            <div className="mt-3 flex h-11 w-36 items-center justify-between border-[3px] border-ink bg-background px-2">
               <button
                 type="button"
                 onClick={() => setQty((value) => Math.max(1, value - 1))}
                 aria-label="Decrease quantity"
-                className="inline-flex size-8 items-center justify-center rounded-full text-ink/70 hover:bg-cream"
+                className="inline-flex size-8 items-center justify-center border-[2px] border-ink text-ink hover:bg-ink hover:text-background transition-colors"
               >
                 <Minus className="size-4" />
               </button>
@@ -226,7 +226,7 @@ export function DishCustomiser({ dish, open, onClose, onAdded }: Props) {
                 type="button"
                 onClick={() => setQty((value) => Math.min(20, value + 1))}
                 aria-label="Increase quantity"
-                className="inline-flex size-8 items-center justify-center rounded-full text-ink/70 hover:bg-cream"
+                className="inline-flex size-8 items-center justify-center border-[2px] border-ink text-ink hover:bg-ink hover:text-background transition-colors"
               >
                 <Plus className="size-4" />
               </button>
@@ -242,17 +242,17 @@ export function DishCustomiser({ dish, open, onClose, onAdded }: Props) {
               onChange={(event) => setNotes(event.target.value)}
               rows={3}
               maxLength={220}
-              className="resize-none border border-ink/15 bg-cream-deep px-3 py-2 text-[14px] text-ink outline-none focus:border-oxblood"
+              className="resize-none border-[3px] border-ink bg-background px-3 py-2 text-[14px] text-ink outline-none focus:outline-[3px] focus:outline-saffron [box-shadow:var(--shadow-brutal-sm)]"
             />
           </label>
         </div>
       </div>
 
-      <div className="sticky bottom-0 border-t border-ink/10 bg-cream px-5 py-4 md:px-7">
+      <div className="sticky bottom-0 border-t-[3px] border-ink bg-background px-5 py-4 md:px-7">
         <button
           type="button"
           onClick={handleSubmit}
-          className="caps-track flex h-12 w-full items-center justify-center rounded-full bg-oxblood-dark px-6 text-[12px] font-semibold text-cream transition-colors hover:bg-oxblood"
+          className="caps-track flex h-12 w-full items-center justify-center border-[3px] border-ink bg-ink px-6 text-[12px] font-bold text-background transition-colors hover:bg-ink/90 [box-shadow:var(--shadow-brutal-sm)] hover:-translate-x-[1px] hover:-translate-y-[1px] active:translate-x-[3px] active:translate-y-[3px] active:[box-shadow:none]"
         >
           Add to order - {formatPrice(lineTotal)}
         </button>

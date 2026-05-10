@@ -27,16 +27,16 @@ export function OrderSummary() {
 
   if (!hydrated) {
     return (
-      <section className="border border-ink/10 bg-cream-deep p-6 md:p-8">
+      <section className="brutal-card p-6 md:p-8">
         <p className="caps-track text-[12px] text-oxblood">Order review</p>
-        <div className="mt-5 h-24 animate-pulse bg-cream/80" />
+        <div className="mt-5 h-24 animate-pulse bg-muted" />
       </section>
     );
   }
 
   if (!lines.length) {
     return (
-      <section className="border border-ink/10 bg-cream-deep p-6 text-center md:p-8">
+      <section className="brutal-card p-6 text-center md:p-8">
         <p className="caps-track text-[12px] text-oxblood">Order review</p>
         <h2 className="mt-3 font-display text-[26px] text-ink">Your cart is empty</h2>
         <p className="mt-3 text-[15px] leading-relaxed text-ink/70">
@@ -44,7 +44,7 @@ export function OrderSummary() {
         </p>
         <Link
           href="/menus"
-          className="caps-track mt-6 inline-flex h-11 items-center justify-center rounded-full bg-oxblood-dark px-7 text-[12px] font-semibold text-cream hover:bg-oxblood"
+          className="caps-track mt-6 inline-flex h-11 items-center justify-center border-[3px] border-ink bg-ink px-7 text-[12px] font-bold text-background hover:bg-ink/90 [box-shadow:var(--shadow-brutal-sm)] hover:-translate-x-[1px] hover:-translate-y-[1px] transition-all"
         >
           Browse the Menu
         </Link>
@@ -53,7 +53,7 @@ export function OrderSummary() {
   }
 
   return (
-    <section className="border border-ink/10 bg-cream-deep p-6 md:p-8">
+    <section className="brutal-card p-6 md:p-8">
       <p className="caps-track text-[12px] text-oxblood">Order review</p>
       <h2 className="mt-3 font-display text-[26px] text-ink">Your dishes</h2>
 
@@ -68,7 +68,7 @@ export function OrderSummary() {
         ))}
       </ul>
 
-      <div className="mt-6 space-y-2 border-t border-ink/10 pt-5 text-[15px] text-ink/75">
+      <div className="mt-6 space-y-2 brutal-divider pt-5 text-[15px] text-ink">
         <div className="flex justify-between gap-4">
           <span>Subtotal</span>
           <span>{formatPrice(subtotal)}</span>
@@ -102,7 +102,7 @@ function SummaryLine({
   onRemove: () => void;
 }) {
   return (
-    <li className="border border-ink/10 bg-cream p-4">
+    <li className="brutal-card-sm p-4">
       <div className="flex items-start justify-between gap-4">
         <div>
           <p className="font-display text-[18px] text-ink">{line.name}</p>
@@ -118,19 +118,19 @@ function SummaryLine({
           type="button"
           onClick={onRemove}
           aria-label={`Remove ${line.name}`}
-          className="inline-flex size-8 shrink-0 items-center justify-center rounded-full text-ink/50 hover:bg-cream-deep hover:text-destructive"
+          className="inline-flex size-8 shrink-0 items-center justify-center border-[2px] border-ink text-ink hover:bg-ink hover:text-background transition-colors"
         >
           <Trash2 className="size-4" strokeWidth={1.5} />
         </button>
       </div>
 
       <div className="mt-4 flex items-center justify-between gap-4">
-        <div className="flex h-9 items-center border border-ink/15 bg-cream-deep px-1">
+        <div className="flex h-9 items-center border-[3px] border-ink bg-background px-1">
           <button
             type="button"
             onClick={() => onQtyChange(line.qty - 1)}
             aria-label={`Decrease ${line.name}`}
-            className="inline-flex size-7 items-center justify-center rounded-full text-ink/70 hover:bg-cream"
+            className="inline-flex size-7 items-center justify-center border-r-[2px] border-ink text-ink hover:bg-ink hover:text-background transition-colors"
           >
             <Minus className="size-3.5" />
           </button>
@@ -139,12 +139,12 @@ function SummaryLine({
             type="button"
             onClick={() => onQtyChange(line.qty + 1)}
             aria-label={`Increase ${line.name}`}
-            className="inline-flex size-7 items-center justify-center rounded-full text-ink/70 hover:bg-cream"
+            className="inline-flex size-7 items-center justify-center border-l-[2px] border-ink text-ink hover:bg-ink hover:text-background transition-colors"
           >
             <Plus className="size-3.5" />
           </button>
         </div>
-        <span className="font-display text-[18px] text-oxblood-dark">
+        <span className="font-display text-[18px] text-ink">
           {formatPrice(line.unitPrice * line.qty)}
         </span>
       </div>

@@ -30,7 +30,7 @@ export function CartButton() {
         type="button"
         onClick={() => setOpen(true)}
         aria-live="polite"
-        className="fixed bottom-5 right-5 z-50 inline-flex h-12 items-center gap-3 rounded-full bg-oxblood-dark px-5 text-[12px] font-semibold uppercase tracking-[0.12em] text-cream shadow-xl transition-colors hover:bg-oxblood"
+        className="fixed bottom-5 right-5 z-50 inline-flex h-12 items-center gap-3 border-[3px] border-ink bg-saffron px-5 text-[12px] font-bold uppercase tracking-[0.12em] text-ink [box-shadow:var(--shadow-brutal)] hover:-translate-x-[2px] hover:-translate-y-[2px] hover:[box-shadow:var(--shadow-brutal-hover)] transition-all"
       >
         <ShoppingBag className="size-4" strokeWidth={1.7} />
         <span>View order</span>

@@ -9,7 +9,7 @@ import { Parallax, Reveal } from "../reveal";
 export function AmbienceSection() {
   return (
     <section id="ambience" className="bg-cream">
-      <div className="relative h-[64vh] min-h-[420px] max-h-[640px] w-full overflow-hidden">
+        <div className="relative h-[64vh] min-h-[420px] max-h-[640px] w-full overflow-hidden brutal-frame">
         <Parallax distance={120} className="absolute inset-0">
           <div className="relative h-[120%] w-full -mt-[10%]">
             <Image
@@ -42,7 +42,7 @@ export function AmbienceSection() {
           </p>
           <Link
             href="/gallery"
-            className="mt-8 caps-track inline-flex items-center justify-center rounded-full border border-oxblood-dark px-7 h-11 text-[12px] font-semibold text-oxblood-dark hover:bg-oxblood-dark hover:text-cream transition-colors"
+            className="mt-8 caps-track inline-flex items-center justify-center border-[3px] border-ink px-7 h-11 text-[12px] font-bold text-ink hover:bg-ink hover:text-background transition-colors [box-shadow:var(--shadow-brutal-sm)] hover:-translate-x-[1px] hover:-translate-y-[1px]"
           >
             View Gallery
           </Link>

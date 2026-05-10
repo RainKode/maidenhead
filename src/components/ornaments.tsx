@@ -1,13 +1,9 @@
 import { cn } from "@/lib/utils";
 
-/** Decorative engraved double rule used between Dishoom sections. */
+/** Brutalist double rule — simple 2px solid line. */
 export function DoubleRule({ className }: { className?: string }) {
   return (
-    <div className={cn("flex flex-col gap-[3px] w-full", className)} aria-hidden="true">
-      <span className="block h-px bg-current opacity-70" />
-      <span className="block h-[3px] bg-current opacity-90" />
-      <span className="block h-px bg-current opacity-70" />
-    </div>
+    <div className={cn("brutal-divider w-full", className)} aria-hidden="true" />
   );
 }
 

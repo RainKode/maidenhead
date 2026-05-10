@@ -44,8 +44,8 @@
   --font-mono: var(--font-mono), ui-monospace, monospace;
   --font-heading: var(--font-display);
 
-  --text-sm: 0.707rem;
-  --text-base: 1rem;
+  --text-sm: 0.8125rem;
+  --text-base: 1.0625rem;
   --text-xl: 1.414rem;
   --text-2xl: 1.999rem;
   --text-3xl: 2.827rem;
@@ -60,34 +60,40 @@
 }
 
 :root {
-  --cream: #ede9cf;
-  --cream-deep: #e3decb;
-  --oxblood: #2d3725;
-  --oxblood-dark: #1f2719;
-  --saffron: #d12e2e;
-  --saffron-dark: #a82424;
-  --ink: #040316;
-  --copper: #be692d;
+  --cream: #fbfbfe;
+  --cream-deep: #f1f1f6;
+  --oxblood: #424b3b;
+  --oxblood-dark: #2e342a;
+  --saffron: #fba600;
+  --saffron-dark: #c98300;
+  --ink: #050315;
+  --copper: #bd692c;
 
   --background: var(--cream);
   --foreground: var(--ink);
-  --card: var(--cream-deep);
+  --card: var(--background);
   --card-foreground: var(--ink);
-  --popover: var(--cream);
+  --popover: var(--background);
   --popover-foreground: var(--ink);
   --primary: var(--oxblood);
-  --primary-foreground: var(--cream);
+  --primary-foreground: var(--background);
   --secondary: var(--saffron);
-  --secondary-foreground: var(--oxblood-dark);
-  --muted: #e8e5d0;
-  --muted-foreground: #4a5240;
+  --secondary-foreground: var(--ink);
+  --muted: #ececf2;
+  --muted-foreground: #3a3a4a;
   --accent: var(--copper);
-  --accent-foreground: var(--cream);
+  --accent-foreground: var(--background);
   --destructive: #b91c1c;
-  --border: #c8c4a8;
-  --input: #dcd9c4;
-  --ring: var(--oxblood);
-  --radius: 0.25rem;
+  --border: var(--ink);
+  --input: var(--cream-deep);
+  --ring: var(--saffron);
+  --radius: 0;
+
+  --shadow-brutal: 8px 8px 0 var(--ink);
+  --shadow-brutal-sm: 5px 5px 0 var(--ink);
+  --shadow-brutal-lg: 12px 12px 0 var(--ink);
+  --shadow-brutal-hover: 10px 10px 0 var(--ink);
+  --shadow-brutal-sm-hover: 7px 7px 0 var(--ink);
 }
 
 .dark {
@@ -121,12 +127,15 @@
   body {
     @apply bg-background text-foreground;
     font-family: var(--font-sans);
-    font-weight: 400;
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    font-weight: 500;
     font-feature-settings: "liga" 1, "kern" 1;
   }
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-heading);
     font-weight: 700;
+    letter-spacing: -0.01em;
   }
   ::selection {
     background: var(--oxblood);
@@ -183,9 +192,9 @@
   }
   .prose-legal p,
   .prose-legal li {
-    font-size: 16px;
-    line-height: 1.75;
-    color: oklch(from var(--ink) l c h / 0.85);
+    font-size: 17px;
+    line-height: 1.7;
+    color: var(--ink);
   }
   .prose-legal p { margin-bottom: 1rem; }
   .prose-legal ul,
@@ -201,6 +210,75 @@
     text-underline-offset: 3px;
   }
   .prose-legal strong { color: var(--ink); font-weight: 600; }
+
+  /* ─── Brutalist utilities ──────────────────────────────────── */
+
+  .brutal-card {
+    border: 4px solid var(--ink);
+    background: var(--background);
+    box-shadow: var(--shadow-brutal);
+    transition: transform .2s ease, box-shadow .2s ease;
+  }
+
+  .brutal-card-sm {
+    border: 3px solid var(--ink);
+    background: var(--background);
+    box-shadow: var(--shadow-brutal-sm);
+    transition: transform .2s ease, box-shadow .2s ease;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .brutal-card.brutal-interactive:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: var(--shadow-brutal-hover);
+    }
+    .brutal-card.brutal-interactive:active {
+      transform: translate(5px, 5px);
+      box-shadow: none;
+    }
+    .brutal-card-sm.brutal-interactive:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: var(--shadow-brutal-sm-hover);
+    }
+    .brutal-card-sm.brutal-interactive:active {
+      transform: translate(4px, 4px);
+      box-shadow: none;
+    }
+  }
+
+  .brutal-divider {
+    border-top: 2px solid var(--ink);
+  }
+
+  .brutal-tag {
+    display: inline-block;
+    border: 2px solid var(--ink);
+    padding: 2px 6px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    font-size: 10px;
+    line-height: 1.4;
+  }
+
+  .brutal-frame {
+    outline: 4px solid var(--ink);
+    outline-offset: -4px;
+    box-shadow: var(--shadow-brutal-lg);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .brutal-shimmer { position: relative; overflow: hidden; }
+    .brutal-shimmer::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      left: -100%;
+      background: linear-gradient(120deg, transparent, rgba(255,255,255,.25), transparent);
+      transition: left .6s;
+    }
+    .brutal-shimmer:hover::before { left: 100%; }
+  }
 }
 
 @keyframes marquee {

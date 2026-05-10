@@ -10,7 +10,7 @@ import { contact, hours, legalLinks, navLinks, siteInfo, socials } from "@/lib/c
  */
 export function NewsletterFooter() {
   return (
-    <footer className="bg-cream-deep border-t border-ink/10">
+    <footer className="bg-background border-t-[3px] border-ink">
       <div className="mx-auto max-w-[1100px] px-6 md:px-10 py-16 md:py-20">
         <div className="text-center max-w-xl mx-auto">
           <p className="caps-track text-[12px] text-oxblood">Stay in touch</p>
@@ -38,16 +38,16 @@ export function NewsletterFooter() {
             </p>
             <button
               type="submit"
-              className="sm:col-span-2 caps-track inline-flex items-center justify-center rounded-full bg-oxblood-dark px-7 h-11 text-[12px] font-medium text-cream hover:bg-oxblood transition-colors"
+              className="sm:col-span-2 caps-track inline-flex items-center justify-center border-[3px] border-ink bg-saffron px-7 h-11 text-[12px] font-bold text-ink hover:bg-saffron/90 [box-shadow:var(--shadow-brutal-sm)] hover:-translate-x-[1px] hover:-translate-y-[1px] transition-all"
             >
               Subscribe
             </button>
           </form>
         </div>
 
-        <div className="mt-16 grid gap-10 sm:grid-cols-2 lg:grid-cols-4 border-t border-ink/10 pt-12">
+        <div className="mt-16 grid gap-10 sm:grid-cols-2 lg:grid-cols-4 border-t-[3px] border-ink pt-12">
           <div>
-            <h4 className="caps-track text-[11px] text-oxblood mb-4">Visit</h4>
+            <h4 className="caps-track text-[11px] font-bold text-ink mb-4">Visit</h4>
             <address className="not-italic font-display text-[16px] text-ink/85 leading-relaxed">
               {contact.addressLine1}
               <br />
@@ -64,7 +64,7 @@ export function NewsletterFooter() {
           </div>
 
           <div>
-            <h4 className="caps-track text-[11px] text-oxblood mb-4">Hours</h4>
+            <h4 className="caps-track text-[11px] font-bold text-ink mb-4">Hours</h4>
             <ul className="space-y-1.5 font-display text-[15px] text-ink/85">
               <li>{hours.summary}</li>
               <li>{hours.dinner}</li>
@@ -73,7 +73,7 @@ export function NewsletterFooter() {
           </div>
 
           <div>
-            <h4 className="caps-track text-[11px] text-oxblood mb-4">
+            <h4 className="caps-track text-[11px] font-bold text-ink mb-4">
               Get in touch
             </h4>
             <ul className="space-y-2 font-display text-[16px] text-ink/85">
@@ -96,7 +96,7 @@ export function NewsletterFooter() {
           </div>
 
           <div>
-            <h4 className="caps-track text-[11px] text-oxblood mb-4">
+            <h4 className="caps-track text-[11px] font-bold text-ink mb-4">
               Explore
             </h4>
             <ul className="space-y-2">
@@ -114,9 +114,9 @@ export function NewsletterFooter() {
           </div>
         </div>
 
-        <div className="mt-16 flex flex-col md:flex-row md:items-end md:justify-between gap-8 border-t border-ink/10 pt-10">
+        <div className="mt-16 flex flex-col md:flex-row md:items-end md:justify-between gap-8 border-t-[3px] border-ink pt-10">
           <div>
-            <p className="font-display text-[18px] italic text-oxblood">
+            <p className="font-display text-[18px] italic text-ink">
               From our tandoor to your table.
             </p>
             <p className="mt-2 text-[12px] text-ink/60">
@@ -137,7 +137,7 @@ export function NewsletterFooter() {
           </div>
 
           <div className="flex flex-col md:items-end gap-4">
-            <p className="caps-track-tight text-[11px] text-oxblood">
+            <p className="caps-track-tight text-[11px] font-bold text-ink">
               Find us online
             </p>
             <ul className="flex items-center gap-4">
@@ -148,7 +148,7 @@ export function NewsletterFooter() {
                     target="_blank"
                     rel="noreferrer"
                     aria-label={s.label}
-                    className="inline-flex size-10 items-center justify-center rounded-full border border-oxblood-dark/30 text-oxblood-dark hover:bg-oxblood-dark hover:text-cream transition-colors"
+                    className="inline-flex size-10 items-center justify-center border-[2px] border-ink text-ink hover:bg-ink hover:text-background transition-colors"
                   >
                     <SocialIcon name={s.label} />
                   </Link>
@@ -175,12 +175,12 @@ function Field({
 }) {
   return (
     <label className="flex flex-col gap-1.5">
-      <span className="caps-track-tight text-[10px] text-ink/60">{label}</span>
+      <span className="caps-track-tight text-[10px] font-bold text-ink uppercase tracking-[0.08em]">{label}</span>
       <input
         type={type}
         name={name}
         placeholder={placeholder}
-        className="bg-transparent border-0 border-b border-ink/25 px-0 h-10 text-[15px] text-ink placeholder:italic placeholder:text-ink/40 focus:outline-none focus:border-oxblood"
+        className="bg-transparent border-0 border-b-[3px] border-ink px-0 h-10 text-[15px] text-ink placeholder:italic placeholder:text-ink/40 focus:outline-none focus:border-saffron"
       />
     </label>
   );

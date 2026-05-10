@@ -16,7 +16,7 @@ export function DishCard({ dish, onSelect }: Props) {
     : `${hasVariants ? "from " : ""}${formatPrice(startingPrice)}`;
 
   return (
-    <article className="group border border-ink/10 bg-cream-deep p-5 transition-colors hover:border-oxblood-dark/35">
+    <article className="brutal-card brutal-interactive p-5">
       <button
         type="button"
         onClick={orderable ? onSelect : undefined}
@@ -25,7 +25,7 @@ export function DishCard({ dish, onSelect }: Props) {
       >
         <div className="flex items-start justify-between gap-5">
           <div className="min-w-0">
-            <h3 className="font-display text-[19px] leading-tight text-ink">
+            <h3 className="font-display text-[22px] leading-tight text-ink">
               {dish.name}
             </h3>
             {dish.dietary?.length ? (
@@ -34,7 +34,7 @@ export function DishCard({ dish, onSelect }: Props) {
                   <span
                     key={tag}
                     title={dietaryKey[tag]}
-                    className="caps-track-tight rounded-sm border border-oxblood/35 px-1.5 py-0.5 text-[9px] font-semibold text-oxblood"
+                    className="brutal-tag bg-background"
                   >
                     {tag}
                   </span>
@@ -42,20 +42,20 @@ export function DishCard({ dish, onSelect }: Props) {
               </div>
             ) : null}
           </div>
-          <span className="shrink-0 font-display text-[18px] text-oxblood-dark">
+          <span className="shrink-0 font-display text-[20px] text-ink bg-saffron px-2 py-1 border-[2px] border-ink [box-shadow:3px_3px_0_var(--ink)]">
             {priceLabel}
           </span>
         </div>
 
         {dish.description ? (
-          <p className="mt-3 text-[14px] leading-relaxed text-ink/70">
+          <p className="mt-3 text-[15px] leading-[1.55] text-ink">
             {dish.description}
           </p>
         ) : null}
 
         {orderable ? (
-          <span className="mt-5 inline-flex h-9 w-fit items-center gap-2 rounded-full border border-oxblood-dark/30 px-4 text-[11px] font-semibold uppercase tracking-[0.12em] text-oxblood-dark transition-colors group-hover:bg-oxblood-dark group-hover:text-cream">
-            <Plus className="size-3.5" strokeWidth={1.75} />
+          <span className="mt-5 inline-flex h-8 w-fit items-center gap-2 border-[2px] border-ink bg-ink text-background px-3 text-[11px] font-bold uppercase tracking-[0.1em] [box-shadow:3px_3px_0_var(--ink)] hover:-translate-x-[1px] hover:-translate-y-[1px] transition-transform">
+            <Plus className="size-3.5" strokeWidth={2} />
             Add
           </span>
         ) : (

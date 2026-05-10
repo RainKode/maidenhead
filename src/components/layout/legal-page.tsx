@@ -18,7 +18,7 @@ export function LegalPage({ title, intro, children }: LegalPageProps) {
       <SiteHeader />
       <main className="flex-1">
         <PageHero eyebrow="Namaste & Welcome" title={title} subtitle={intro} />
-        <article className="bg-cream py-16 md:py-20">
+        <article className="bg-background py-16 md:py-20">
           <div className="mx-auto max-w-[760px] px-6 md:px-10 prose-legal">
             {children}
           </div>

@@ -2,22 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Menu, Phone, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { navLinks, ctaLinks, contact } from "@/lib/content";
 
 export function SiteHeader() {
-  const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 12);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
 
   const closeDrawer = () => setOpen(false);
 
@@ -25,14 +17,7 @@ export function SiteHeader() {
     href === "/" ? pathname === "/" : pathname?.startsWith(href) ?? false;
 
   return (
-    <header
-      className={cn(
-        "sticky top-0 z-50 transition-[background-color,box-shadow,border-color] duration-300",
-        scrolled
-          ? "bg-cream/95 backdrop-blur-md border-b border-oxblood-dark/10 shadow-[0_1px_0_rgba(0,0,0,0.04)]"
-          : "bg-cream border-b border-transparent"
-      )}
-    >
+    <header className="sticky top-0 z-50 bg-background border-b-[3px] border-ink">
       <div className="mx-auto max-w-[1440px] px-4 md:px-8 h-16 md:h-[88px] grid grid-cols-[1fr_auto_1fr] items-center gap-4">
         <div className="flex items-center gap-2 md:gap-5">
           <button
@@ -40,7 +25,7 @@ export function SiteHeader() {
             aria-label="Toggle menu"
             aria-expanded={open}
             onClick={() => setOpen((v) => !v)}
-            className="-ml-2 inline-flex items-center gap-2 p-2 text-oxblood-dark hover:text-oxblood transition-colors lg:hidden"
+            className="-ml-2 inline-flex items-center gap-2 p-2 text-ink hover:text-oxblood transition-colors lg:hidden"
           >
             {open ? (
               <X className="size-[22px]" strokeWidth={1.5} />
@@ -59,10 +44,10 @@ export function SiteHeader() {
                   key={l.label}
                   href={l.href}
                   className={cn(
-                    "caps-track-tight relative text-[11px] font-semibold transition-colors",
+                    "caps-track-tight relative text-[13px] font-bold transition-colors",
                     active
-                      ? "text-oxblood"
-                      : "text-oxblood-dark/85 hover:text-oxblood"
+                      ? "text-ink"
+                      : "text-ink/70 hover:text-ink"
                   )}
                 >
                   {l.label}
@@ -82,7 +67,7 @@ export function SiteHeader() {
         <Link
           href="/"
           aria-label="Maidenhead Spice — home"
-          className="font-display text-[18px] md:text-[26px] tracking-[0.18em] text-oxblood-dark whitespace-nowrap"
+          className="font-display text-[18px] md:text-[26px] tracking-[0.18em] text-ink whitespace-nowrap"
         >
           MAIDENHEAD SPICE
         </Link>
@@ -91,20 +76,20 @@ export function SiteHeader() {
           <a
             href={`tel:${contact.phones[0].replace(/\s+/g, "")}`}
             aria-label="Call us"
-            className="hidden md:inline-flex items-center gap-2 caps-track-tight text-[11px] font-semibold text-oxblood-dark hover:text-oxblood transition-colors"
+            className="hidden md:inline-flex items-center gap-2 caps-track-tight text-[11px] font-bold text-ink hover:text-oxblood transition-colors"
           >
             <Phone className="size-4" strokeWidth={1.5} />
             <span>{contact.phones[0]}</span>
           </a>
           <Link
             href={ctaLinks.order}
-            className="caps-track hidden sm:inline-flex items-center justify-center rounded-full border border-oxblood-dark px-4 md:px-5 h-9 md:h-10 text-[11px] font-semibold text-oxblood-dark hover:bg-oxblood-dark hover:text-cream transition-colors"
+            className="caps-track hidden sm:inline-flex items-center justify-center border-[3px] border-ink px-4 md:px-5 h-9 md:h-10 text-[11px] font-bold text-ink hover:bg-ink hover:text-background transition-colors [box-shadow:var(--shadow-brutal-sm)] hover:-translate-x-[1px] hover:-translate-y-[1px]"
           >
             Order
           </Link>
           <Link
             href={ctaLinks.book}
-            className="caps-track inline-flex items-center justify-center rounded-full bg-oxblood-dark px-4 md:px-6 h-9 md:h-10 text-[11px] font-semibold text-cream hover:bg-oxblood transition-colors"
+            className="caps-track inline-flex items-center justify-center border-[3px] border-ink bg-saffron px-4 md:px-6 h-9 md:h-10 text-[11px] font-bold text-ink hover:bg-saffron/90 transition-colors [box-shadow:var(--shadow-brutal-sm)] hover:-translate-x-[1px] hover:-translate-y-[1px]"
           >
             Book
           </Link>
@@ -113,19 +98,19 @@ export function SiteHeader() {
 
       <div
         className={cn(
-          "lg:hidden overflow-hidden border-t border-oxblood-dark/10 transition-[max-height,opacity] duration-300",
+          "lg:hidden overflow-hidden border-t-[3px] border-ink transition-[max-height,opacity] duration-300",
           open ? "max-h-[480px] opacity-100" : "max-h-0 opacity-0"
         )}
       >
-        <nav className="bg-cream px-6 py-6 flex flex-col gap-4">
+        <nav className="bg-background px-6 py-6 flex flex-col gap-4 [box-shadow:var(--shadow-brutal)]">
           {navLinks.map((l) => (
             <Link
               key={l.label}
               href={l.href}
               onClick={closeDrawer}
               className={cn(
-                "font-display text-[20px] tracking-tight",
-                isActive(l.href) ? "text-oxblood" : "text-ink/85"
+                "font-display text-[20px] tracking-tight font-bold uppercase tracking-[0.08em]",
+                isActive(l.href) ? "text-ink" : "text-ink/70"
               )}
             >
               {l.label}
@@ -134,7 +119,7 @@ export function SiteHeader() {
           <a
             href={`tel:${contact.phones[0].replace(/\s+/g, "")}`}
             onClick={closeDrawer}
-            className="caps-track-tight text-[12px] text-oxblood-dark mt-2"
+            className="caps-track-tight text-[12px] text-ink/70 mt-2"
           >
             Call · {contact.phones[0]}
           </a>
