@@ -76,7 +76,14 @@ export async function POST(request: Request) {
 
   if (staffResult.status === "rejected") {
     console.error("[contact] staff email failed", staffResult.reason);
-    return NextResponse.json({ ok: false, error: "Failed to send message" }, { status: 500 });
+    const detail =
+      staffResult.reason instanceof Error
+        ? staffResult.reason.message
+        : String(staffResult.reason);
+    return NextResponse.json(
+      { ok: false, error: "Failed to send message", detail },
+      { status: 500 }
+    );
   }
   if (customerResult.status === "rejected") {
     console.error("[contact] customer auto-reply failed", customerResult.reason);

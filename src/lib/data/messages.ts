@@ -13,14 +13,18 @@ export interface NewMessage {
 export async function createMessage(input: NewMessage): Promise<void> {
   const db = getSupabaseAdmin();
   if (!db) return;
-  const { error } = await db.from("contact_messages").insert({
-    name: input.name,
-    email: input.email,
-    subject: input.subject,
-    message: input.message,
-    read: false,
-  });
-  if (error) console.error("[messages] insert failed", error);
+  try {
+    const { error } = await db.from("contact_messages").insert({
+      name: input.name,
+      email: input.email,
+      subject: input.subject,
+      message: input.message,
+      read: false,
+    });
+    if (error) console.error("[messages] insert failed", error);
+  } catch (err) {
+    console.error("[messages] insert threw", err);
+  }
 }
 
 export async function getMessages(): Promise<ContactMessageRow[]> {

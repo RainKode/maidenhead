@@ -10,24 +10,28 @@ import type { OrderRow, OrderStatus } from "@/lib/supabase/types";
 export async function createOrder(order: OrderEmailPayload): Promise<void> {
   const db = getSupabaseAdmin();
   if (!db) return;
-  const { error } = await db.from("orders").insert({
-    ref: order.ref,
-    order_type: order.orderType,
-    customer_name: order.customer.name,
-    customer_phone: order.customer.phone,
-    customer_email: order.customer.email,
-    requested_date: order.requestedFor.date,
-    requested_time: order.requestedFor.time,
-    delivery: order.delivery ?? null,
-    dine_in: order.dineIn ?? null,
-    notes: order.notes ?? null,
-    items: order.lines,
-    subtotal: order.subtotal,
-    delivery_fee: order.deliveryFee,
-    total: order.total,
-    status: "new",
-  });
-  if (error) console.error("[orders] insert failed", error);
+  try {
+    const { error } = await db.from("orders").insert({
+      ref: order.ref,
+      order_type: order.orderType,
+      customer_name: order.customer.name,
+      customer_phone: order.customer.phone,
+      customer_email: order.customer.email,
+      requested_date: order.requestedFor.date,
+      requested_time: order.requestedFor.time,
+      delivery: order.delivery ?? null,
+      dine_in: order.dineIn ?? null,
+      notes: order.notes ?? null,
+      items: order.lines,
+      subtotal: order.subtotal,
+      delivery_fee: order.deliveryFee,
+      total: order.total,
+      status: "new",
+    });
+    if (error) console.error("[orders] insert failed", error);
+  } catch (err) {
+    console.error("[orders] insert threw", err);
+  }
 }
 
 export async function getOrders(

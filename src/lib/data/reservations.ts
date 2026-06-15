@@ -19,17 +19,21 @@ export interface NewReservation {
 export async function createReservation(input: NewReservation): Promise<void> {
   const db = getSupabaseAdmin();
   if (!db) return;
-  const { error } = await db.from("reservations").insert({
-    name: input.name,
-    phone: input.phone,
-    email: input.email,
-    date: input.date,
-    time: input.time,
-    party_size: input.party_size,
-    notes: input.notes ?? null,
-    status: "pending",
-  });
-  if (error) console.error("[reservations] insert failed", error);
+  try {
+    const { error } = await db.from("reservations").insert({
+      name: input.name,
+      phone: input.phone,
+      email: input.email,
+      date: input.date,
+      time: input.time,
+      party_size: input.party_size,
+      notes: input.notes ?? null,
+      status: "pending",
+    });
+    if (error) console.error("[reservations] insert failed", error);
+  } catch (err) {
+    console.error("[reservations] insert threw", err);
+  }
 }
 
 export async function getReservations(

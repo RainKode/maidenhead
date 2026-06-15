@@ -89,7 +89,14 @@ export async function POST(request: Request) {
 
   if (staffResult.status === "rejected") {
     console.error("[booking] staff email failed", staffResult.reason);
-    return NextResponse.json({ ok: false, error: "Failed to send booking request" }, { status: 500 });
+    const detail =
+      staffResult.reason instanceof Error
+        ? staffResult.reason.message
+        : String(staffResult.reason);
+    return NextResponse.json(
+      { ok: false, error: "Failed to send booking request", detail },
+      { status: 500 }
+    );
   }
   if (customerResult.status === "rejected") {
     console.error("[booking] customer auto-reply failed", customerResult.reason);
