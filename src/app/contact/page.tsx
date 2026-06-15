@@ -63,6 +63,19 @@ export default function ContactPage() {
               </div>
               <div>
                 <h3 className="caps-track text-[11px] text-oxblood mb-3">
+                  WhatsApp
+                </h3>
+                <a
+                  href={`https://wa.me/${contact.whatsapp.replace(/\D/g, "")}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="font-display text-[16px] text-ink/85 link-rule"
+                >
+                  {contact.whatsapp}
+                </a>
+              </div>
+              <div>
+                <h3 className="caps-track text-[11px] text-oxblood mb-3">
                   Email
                 </h3>
                 <a

@@ -6,10 +6,10 @@
 
 export const siteInfo = {
   name: "Maidenhead Spice",
-  tagline: "From our tandoor to your table",
+  tagline: "From our Kitchen to your table",
   description:
     "Maidenhead Spice — vibrant, authentic Indian cooking on Bridge Road. Sunday buffet, fragrant biryanis, slow-cooked curries and proper hospitality, seven days a week.",
-  url: "https://www.maidenheadspice.com",
+  url: "https://www.maidenheadspice.co.uk",
 } as const;
 
 export const contact = {
@@ -19,6 +19,7 @@ export const contact = {
   region: "Berkshire",
   country: "United Kingdom",
   phones: ["01628 670670", "01628 673673"],
+  whatsapp: "+44 7359 084877",
   email: "info@maidenheadspice.co.uk",
   // Google Maps embed for 117 Bridge Road, Maidenhead.
   mapEmbed:
@@ -40,18 +41,36 @@ export const hours = {
   ],
 } as const;
 
+// TikTok + Threads use the maidenheadspicex handle (Threads mirrors the
+// Instagram handle). Confirm the TikTok account exists, or remove it.
 export const socials = [
   {
+    label: "Google",
+    href: "https://www.google.com/search?q=Maidenhead+Spice+117+Bridge+Road",
+  },
+  {
     label: "Facebook",
-    href: "https://www.facebook.com/maidenheadspicex",
+    href: "https://www.facebook.com/maidenheadspicex/",
+  },
+  {
+    label: "Instagram",
+    href: "https://www.instagram.com/maidenheadspicex/",
+  },
+  {
+    label: "TikTok",
+    href: "https://www.tiktok.com/@maidenheadspicex",
   },
   {
     label: "TripAdvisor",
     href: "https://www.tripadvisor.in/Restaurant_Review-g186418-d7612304-Reviews-Maidenhead_Spice-Maidenhead_Windsor_and_Maidenhead_Berkshire_England.html",
   },
   {
-    label: "Google",
-    href: "https://www.google.com/search?q=Maidenhead+Spice+117+Bridge+Road",
+    label: "X",
+    href: "https://x.com/maidenhead_spc",
+  },
+  {
+    label: "Threads",
+    href: "https://www.threads.net/@maidenheadspicex",
   },
 ] as const;
 
