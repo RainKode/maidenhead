@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { findDishById, type ModifierGroup } from "@/lib/menu-data";
+import { type Dish, type ModifierGroup } from "@/lib/menu-data";
+import { getDishMap } from "@/lib/data/menu";
+import { createOrder } from "@/lib/data/orders";
 import {
   DELIVERY_MINIMUM,
   getDeliveryFee,
@@ -108,9 +110,10 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false, error: "Party size is required" }, { status: 400 });
   }
 
+  const dishMap = await getDishMap();
   const repricedLines: OrderEmailLine[] = [];
   for (const line of order.lines) {
-    const result = repriceLine(line);
+    const result = repriceLine(line, dishMap);
     if (!result.ok) {
       return NextResponse.json({ ok: false, error: result.error }, { status: 400 });
     }
@@ -153,6 +156,9 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false, error: "Server configuration error" }, { status: 500 });
   }
 
+  // Persist the order (best-effort — never blocks the kitchen email).
+  await createOrder(payload);
+
   const staffTemplate = renderOrderEmail({ order: payload, audience: "staff" });
   const customerTemplate = renderOrderEmail({ order: payload, audience: "customer" });
 
@@ -185,8 +191,11 @@ export async function POST(request: Request) {
 
 type ParsedLine = z.infer<typeof lineSchema>;
 
-function repriceLine(line: ParsedLine): { ok: true; line: OrderEmailLine } | { ok: false; error: string } {
-  const dish = findDishById(line.dishId);
+function repriceLine(
+  line: ParsedLine,
+  dishMap: Map<string, Dish>
+): { ok: true; line: OrderEmailLine } | { ok: false; error: string } {
+  const dish = dishMap.get(line.dishId);
   if (!dish || dish.orderable === false) return { ok: false, error: "Dish is not available" };
 
   let basePrice = dish.basePrice;

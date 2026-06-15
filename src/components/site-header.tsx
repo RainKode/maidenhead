@@ -36,7 +36,7 @@ export function SiteHeader() {
               {open ? "Close" : "Menu"}
             </span>
           </button>
-          <nav className="hidden lg:flex items-center gap-7">
+          <nav className="hidden lg:flex items-center gap-5 xl:gap-7">
             {navLinks.map((l) => {
               const active = isActive(l.href);
               return (

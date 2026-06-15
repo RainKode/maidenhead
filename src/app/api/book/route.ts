@@ -7,6 +7,7 @@ import {
   renderBookingCustomerEmail,
   type BookingPayload,
 } from "@/lib/mail";
+import { createReservation } from "@/lib/data/reservations";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -55,6 +56,17 @@ export async function POST(request: Request) {
     console.error("[booking] MAIL_TO env var is not set");
     return NextResponse.json({ ok: false, error: "Server configuration error" }, { status: 500 });
   }
+
+  // Persist the booking (best-effort — never blocks the request email).
+  await createReservation({
+    name: payload.name,
+    phone: payload.phone,
+    email: payload.email,
+    date: payload.date,
+    time: payload.time,
+    party_size: Number.parseInt(payload.party, 10) || 1,
+    notes: payload.notes,
+  });
 
   const staffTemplate = renderBookingStaffEmail(payload);
   const customerTemplate = renderBookingCustomerEmail(payload);

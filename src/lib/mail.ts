@@ -223,6 +223,77 @@ export function renderBookingCustomerEmail(p: BookingPayload): { html: string; t
 }
 
 // ---------------------------------------------------------------------------
+// Customer email — reservation confirmed / declined (sent from the admin)
+// ---------------------------------------------------------------------------
+
+export interface ReservationStatusPayload {
+  name: string;
+  date: string;
+  time: string;
+  party: string;
+  status: "confirmed" | "declined";
+}
+
+export function renderReservationStatusEmail(p: ReservationStatusPayload): {
+  subject: string;
+  html: string;
+  text: string;
+} {
+  const guests = `${esc(p.party)} ${Number(p.party) === 1 ? "guest" : "guests"}`;
+
+  if (p.status === "confirmed") {
+    const html = shell(`
+      <h2 style="margin:0 0 16px;font-size:20px;color:#7B1C2E;">Your table is confirmed</h2>
+      <p style="font-size:15px;line-height:1.7;margin:0 0 16px;">Hi ${esc(p.name)},</p>
+      <p style="font-size:15px;line-height:1.7;margin:0 0 16px;">
+        Lovely — we've confirmed your table for <strong>${guests}</strong>
+        on <strong>${esc(p.date)}</strong> at <strong>${esc(p.time)}</strong>.
+      </p>
+      <p style="font-size:15px;line-height:1.7;margin:0 0 16px;">
+        If anything changes, give us a ring on
+        <a href="tel:01628670670" style="color:#7B1C2E;">01628 670670</a>.
+        Otherwise, we'll see you then.
+      </p>
+      <p style="font-size:14px;color:#555;margin:24px 0 0;">— The team at Maidenhead Spice</p>
+    `);
+    const text = [
+      `Hi ${p.name},`,
+      "",
+      `Your table for ${p.party} ${Number(p.party) === 1 ? "guest" : "guests"} on ${p.date} at ${p.time} is confirmed.`,
+      "If anything changes, call us on 01628 670670. See you then.",
+      "",
+      "— The team at Maidenhead Spice",
+    ].join("\n");
+    return { subject: "Your table is confirmed — Maidenhead Spice", html, text };
+  }
+
+  const html = shell(`
+    <h2 style="margin:0 0 16px;font-size:20px;color:#7B1C2E;">About your table request</h2>
+    <p style="font-size:15px;line-height:1.7;margin:0 0 16px;">Hi ${esc(p.name)},</p>
+    <p style="font-size:15px;line-height:1.7;margin:0 0 16px;">
+      Thank you for your request for <strong>${guests}</strong> on
+      <strong>${esc(p.date)}</strong> at <strong>${esc(p.time)}</strong>.
+      Unfortunately we're unable to confirm that exact slot.
+    </p>
+    <p style="font-size:15px;line-height:1.7;margin:0 0 16px;">
+      We'd still love to feed you — please call us on
+      <a href="tel:01628670670" style="color:#7B1C2E;">01628 670670</a>
+      and we'll find a time that works.
+    </p>
+    <p style="font-size:14px;color:#555;margin:24px 0 0;">— The team at Maidenhead Spice</p>
+  `);
+  const text = [
+    `Hi ${p.name},`,
+    "",
+    `Thank you for your request for ${p.party} ${Number(p.party) === 1 ? "guest" : "guests"} on ${p.date} at ${p.time}. Unfortunately we're unable to confirm that exact slot.`,
+    "Please call us on 01628 670670 and we'll find a time that works.",
+    "",
+    "— The team at Maidenhead Spice",
+  ].join("\n");
+  return { subject: "About your table request — Maidenhead Spice", html, text };
+}
+
+// ---------------------------------------------------------------------------
 // Staff notification — contact
 // ---------------------------------------------------------------------------
 

@@ -4,7 +4,8 @@ import { MenuBrowse } from "@/components/menu/menu-browse";
 import { PageHero } from "@/components/layout/page-hero";
 import { NewsletterFooter } from "@/components/sections/newsletter-footer";
 import { SiteHeader } from "@/components/site-header";
-import { menu, printableMenuPages } from "@/lib/menu-data";
+import { printableMenuPages } from "@/lib/menu-data";
+import { getMenu } from "@/lib/data/menu";
 
 export const metadata: Metadata = {
   title: "Menus",
@@ -12,7 +13,11 @@ export const metadata: Metadata = {
     "Browse the Maidenhead Spice menu, customise dishes and build an order for collection, delivery or dine-in pre-order.",
 };
 
-export default function MenusPage() {
+// Always reflect the latest menu from the database (admin edits show instantly).
+export const dynamic = "force-dynamic";
+
+export default async function MenusPage() {
+  const menu = await getMenu();
   return (
     <>
       <SiteHeader />

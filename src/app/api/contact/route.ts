@@ -7,6 +7,7 @@ import {
   renderContactCustomerEmail,
   type ContactPayload,
 } from "@/lib/mail";
+import { createMessage } from "@/lib/data/messages";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -50,6 +51,9 @@ export async function POST(request: Request) {
     console.error("[contact] MAIL_TO env var is not set");
     return NextResponse.json({ ok: false, error: "Server configuration error" }, { status: 500 });
   }
+
+  // Persist the message (best-effort — never blocks the request email).
+  await createMessage(payload);
 
   const staffTemplate = renderContactStaffEmail(payload);
   const customerTemplate = renderContactCustomerEmail(payload);
