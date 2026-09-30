@@ -143,6 +143,20 @@ export function formatLongDate(iso: string): string {
   return formatIso(iso, { weekday: "long", day: "numeric", month: "long" });
 }
 
+/** "Thursday 2 October 2026" — for printed copies, which outlive the week. */
+export function formatFullDate(iso: string): string {
+  // Built from parts: en-GB inserts a comma after the weekday once a year is added.
+  return `${formatLongDate(iso)} ${formatIso(iso, { year: "numeric" })}`;
+}
+
+/** Opening hours for that day as guests read them, e.g. "5.30pm – 10.30pm". */
+export function hoursForDate(iso: string): { day: string; times: string } | null {
+  if (!isIsoDate(iso)) return null;
+  const dayName = DAY_NAMES[toUtcNoon(iso).getUTCDay()];
+  const day = hours.weekly.find((d) => d.day === dayName);
+  return day ? { day: day.day, times: day.times } : null;
+}
+
 export type BookingRequest = {
   name: string;
   phone: string;

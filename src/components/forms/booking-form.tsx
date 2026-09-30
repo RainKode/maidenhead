@@ -1,7 +1,7 @@
 "use client";
 
-import { useId, useState } from "react";
-import { CalendarDays, ChevronDown } from "lucide-react";
+import { useCallback, useId, useState } from "react";
+import { CalendarDays, ChevronDown, Download } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { contact } from "@/lib/content";
 import { postJson } from "@/lib/post-json";
@@ -19,17 +19,13 @@ import {
   servicesForDate,
 } from "@/lib/booking";
 import { useRestaurantClock } from "@/hooks/use-restaurant-clock";
+// Type only — the PDF code itself is loaded on demand from the confirmation card.
+import type { BookingPdfDetails } from "@/lib/booking-pdf";
 
 type FieldName = "date" | "time" | "name" | "phone" | "email";
 type Errors = Partial<Record<FieldName, string>>;
-type Confirmed = {
-  firstName: string;
-  phone: string;
-  date: string;
-  time: string;
-  party: number;
-  isToday: boolean;
-};
+type Confirmed = BookingPdfDetails & { isToday: boolean };
+type PdfState = "idle" | "working" | "error";
 
 const PHONE = contact.phones[0];
 const PHONE_HREF = `tel:${PHONE.replace(/\s+/g, "")}`;
@@ -56,6 +52,11 @@ export function BookingForm() {
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [confirmed, setConfirmed] = useState<Confirmed | null>(null);
+  const [pdfState, setPdfState] = useState<PdfState>("idle");
+  // Stable, so re-renders of the confirmation card don't scroll it again.
+  const scrollIntoViewOnMount = useCallback((el: HTMLDivElement | null) => {
+    el?.scrollIntoView({ block: "start", behavior: "smooth" });
+  }, []);
 
   const today = clock?.date ?? "";
   const quickDates = today
@@ -130,14 +131,31 @@ export function BookingForm() {
       setSubmitError(result.error);
       return;
     }
+    setPdfState("idle");
     setConfirmed({
-      firstName: name.split(/\s+/)[0],
+      name,
       phone,
+      email,
       date,
       time: selectedTime,
       party: partySize,
+      notes: field("notes") || undefined,
+      requestedAt: Date.now(),
       isToday: date === today,
     });
+  };
+
+  const downloadPdf = async () => {
+    if (!confirmed || pdfState === "working") return;
+    setPdfState("working");
+    try {
+      const { downloadBookingPdf } = await import("@/lib/booking-pdf");
+      await downloadBookingPdf(confirmed);
+      setPdfState("idle");
+    } catch (err) {
+      console.error("[booking] PDF failed", err);
+      setPdfState("error");
+    }
   };
 
   const startOver = () => {
@@ -153,12 +171,12 @@ export function BookingForm() {
     return (
       <div
         role="status"
-        ref={(el) => el?.scrollIntoView({ block: "start", behavior: "smooth" })}
+        ref={scrollIntoViewOnMount}
         className="brutal-card scroll-mt-24 md:scroll-mt-32 px-6 py-10 text-center"
       >
         <p className="caps-track text-[12px] text-oxblood">Request received</p>
         <h3 className="mt-3 font-display text-[26px] md:text-[30px] leading-tight text-ink">
-          Thank you, {confirmed.firstName}
+          Thank you, {confirmed.name.split(/\s+/)[0]}
         </h3>
         <dl className="mx-auto mt-6 max-w-sm border-[3px] border-ink text-left [box-shadow:var(--shadow-brutal-sm)]">
           {[
@@ -188,13 +206,29 @@ export function BookingForm() {
             .
           </p>
         ) : null}
-        <button
-          type="button"
-          onClick={startOver}
-          className="mt-8 caps-track inline-flex items-center justify-center border-[3px] border-ink px-6 h-11 text-[11px] font-bold text-ink hover:bg-ink hover:text-background transition-colors [box-shadow:var(--shadow-brutal-sm)] hover:-translate-x-[1px] hover:-translate-y-[1px]"
-        >
-          Make another booking
-        </button>
+        <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
+          <button
+            type="button"
+            onClick={downloadPdf}
+            disabled={pdfState === "working"}
+            className="caps-track inline-flex w-full max-w-[260px] sm:w-auto items-center justify-center gap-2 border-[3px] border-ink bg-saffron px-6 h-11 text-[11px] font-bold text-ink hover:bg-saffron/90 transition-all [box-shadow:var(--shadow-brutal-sm)] hover:-translate-x-[1px] hover:-translate-y-[1px] disabled:cursor-wait disabled:opacity-60"
+          >
+            <Download aria-hidden className="size-4" strokeWidth={2} />
+            {pdfState === "working" ? "Preparing…" : "Download PDF"}
+          </button>
+          <button
+            type="button"
+            onClick={startOver}
+            className="caps-track inline-flex w-full max-w-[260px] sm:w-auto items-center justify-center border-[3px] border-ink px-6 h-11 text-[11px] font-bold text-ink hover:bg-ink hover:text-background transition-colors [box-shadow:var(--shadow-brutal-sm)] hover:-translate-x-[1px] hover:-translate-y-[1px]"
+          >
+            Make another booking
+          </button>
+        </div>
+        {pdfState === "error" ? (
+          <p role="alert" className="mt-4 text-[13px] font-bold text-destructive">
+            Sorry, the PDF could not be created. A screenshot of this page works too.
+          </p>
+        ) : null}
       </div>
     );
   }
