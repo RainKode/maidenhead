@@ -26,6 +26,7 @@ from __future__ import annotations
 import base64
 import io
 import re
+import struct
 from pathlib import Path
 
 from PIL import Image
@@ -104,6 +105,19 @@ def render_svg(page, svg: str, size: int) -> Image.Image:
     return Image.open(io.BytesIO(png)).convert("RGBA")
 
 
+def largest_icon_first(path: Path) -> None:
+    """Pillow writes ICO entries smallest-first, and bundlers label the icon
+    with the first entry's size. Reorder so the 48px entry leads (Google
+    wants favicons of 48px or more). Entries carry their own data offsets,
+    so only the directory changes."""
+    data = bytearray(path.read_bytes())
+    count = struct.unpack_from("<H", data, 4)[0]
+    entries = [bytes(data[6 + 16 * i : 22 + 16 * i]) for i in range(count)]
+    entries.sort(key=lambda e: e[0] or 256, reverse=True)
+    data[6 : 6 + 16 * count] = b"".join(entries)
+    path.write_bytes(bytes(data))
+
+
 def render_og(page, light_logo: str) -> Image.Image:
     photo = base64.b64encode(OG_PHOTO.read_bytes()).decode()
     html = f"""<!doctype html><html><head>
@@ -165,6 +179,7 @@ def main() -> None:
                       for s, e in ((48, 2.6), (32, 3.2), (16, 4.4))]
         ico_frames[0].save(APP / "favicon.ico", format="ICO", sizes=[(48, 48), (32, 32), (16, 16)],
                            append_images=ico_frames[1:])
+        largest_icon_first(APP / "favicon.ico")
 
         # Home-screen icons: iOS and Android crop the corners, so leave room.
         render_svg(page, monogram_svg(box, tile=INK, fill=CREAM, coverage=0.8, embolden=0.8), 180) \

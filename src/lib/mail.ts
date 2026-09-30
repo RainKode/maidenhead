@@ -1,4 +1,4 @@
-import nodemailer from "nodemailer";
+import { createTransport, type Transporter } from "nodemailer";
 
 // ---------------------------------------------------------------------------
 // Environment validation
@@ -14,11 +14,11 @@ function requireEnv(key: string): string {
 // Transport (lazy singleton)
 // ---------------------------------------------------------------------------
 
-let _transporter: nodemailer.Transporter | null = null;
+let _transporter: Transporter | null = null;
 
-function getTransporter(): nodemailer.Transporter {
+function getTransporter(): Transporter {
   if (!_transporter) {
-    _transporter = nodemailer.createTransport({
+    _transporter = createTransport({
       host: requireEnv("SMTP_HOST"),
       port: Number(requireEnv("SMTP_PORT")),
       secure: process.env.SMTP_SECURE !== "false", // default true (port 465)
