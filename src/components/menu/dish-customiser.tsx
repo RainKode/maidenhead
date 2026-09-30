@@ -242,7 +242,7 @@ export function DishCustomiser({ dish, open, onClose, onAdded }: Props) {
               onChange={(event) => setNotes(event.target.value)}
               rows={3}
               maxLength={220}
-              className="resize-none border-[3px] border-ink bg-background px-3 py-2 text-[14px] text-ink outline-none focus:outline-[3px] focus:outline-saffron [box-shadow:var(--shadow-brutal-sm)]"
+              className="resize-none border-[3px] border-ink bg-background px-3 py-2 text-[16px] text-ink outline-none focus:outline-[3px] focus:outline-saffron [box-shadow:var(--shadow-brutal-sm)]"
             />
           </label>
         </div>

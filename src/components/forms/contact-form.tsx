@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { postJson } from "@/lib/post-json";
 
 type Status = "idle" | "submitting" | "success" | "error";
 
@@ -10,22 +11,17 @@ export function ContactForm() {
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (status === "submitting") return;
     setStatus("submitting");
     setError(null);
-    const formData = new FormData(e.currentTarget);
-    const payload = Object.fromEntries(formData.entries());
-    try {
-      const res = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-      if (!res.ok) throw new Error("Request failed");
+    // Read the form before awaiting — React clears `currentTarget` afterwards.
+    const payload = Object.fromEntries(new FormData(e.currentTarget).entries());
+    const result = await postJson("/api/contact", payload);
+    if (result.ok) {
       setStatus("success");
-      e.currentTarget.reset();
-    } catch (err) {
+    } else {
       setStatus("error");
-      setError(err instanceof Error ? err.message : "Something went wrong");
+      setError(result.error);
     }
   };
 
@@ -70,7 +66,7 @@ export function ContactForm() {
           name="message"
           rows={6}
           required
-          className="bg-transparent border-[3px] border-ink px-3 py-2 text-[15px] text-ink focus:outline-none focus:outline-[3px] focus:outline-saffron resize-none [box-shadow:var(--shadow-brutal-sm)]"
+          className="bg-transparent border-[3px] border-ink px-3 py-2 text-[16px] text-ink focus:outline-none focus:outline-[3px] focus:outline-saffron resize-none [box-shadow:var(--shadow-brutal-sm)]"
         />
       </label>
       <button
@@ -90,12 +86,13 @@ export function ContactForm() {
         style={{ position: "absolute", left: "-9999px", opacity: 0, height: 0 }}
       />
       {error ? (
-        <p role="alert" className="text-[13px] text-destructive">
-          {error}. Please email{" "}
+        <p role="alert" className="text-[14px] leading-relaxed text-destructive">
+          <span className="font-bold">{error}</span> Your message is still
+          here, so you can try again — or email{" "}
           <a href="mailto:info@maidenheadspice.co.uk" className="link-rule">
             info@maidenheadspice.co.uk
-          </a>{" "}
-          instead.
+          </a>
+          .
         </p>
       ) : null}
     </form>
@@ -123,7 +120,7 @@ function Field({
         type={type}
         name={name}
         required={required}
-        className="bg-transparent border-0 border-b-[3px] border-ink px-0 h-10 text-[15px] text-ink focus:outline-none focus:border-saffron"
+        className="bg-transparent border-0 border-b-[3px] border-ink px-0 h-10 text-[16px] text-ink focus:outline-none focus:border-saffron"
       />
     </label>
   );

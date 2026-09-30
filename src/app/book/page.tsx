@@ -9,8 +9,10 @@ import { contact, hours } from "@/lib/content";
 export const metadata: Metadata = {
   title: "Book a Table",
   description:
-    "Reserve your table at Maidenhead Spice — lunch, dinner or our Sunday buffet. We will confirm by phone.",
+    "Reserve your table at Maidenhead Spice — dinner seven nights a week or our Sunday buffet lunch. We will confirm by phone.",
 };
+
+const primaryPhone = contact.phones[0];
 
 export default function BookPage() {
   return (
@@ -23,23 +25,37 @@ export default function BookPage() {
           subtitle="Tell us when you would like to come, and we will confirm your booking by phone."
         />
 
-        <section className="bg-cream py-16 md:py-20">
-          <div className="mx-auto max-w-[1100px] px-6 md:px-10 grid gap-10 lg:grid-cols-[1fr_320px]">
-            <div className="bg-cream-deep border border-ink/10 px-6 md:px-10 py-10 md:py-12">
+        <section className="bg-cream py-10 md:py-20">
+          <div className="mx-auto max-w-[1100px] px-4 sm:px-6 md:px-10 grid gap-12 lg:gap-10 lg:grid-cols-[1fr_320px] lg:items-start">
+            {/* BookingForm's date row bleeds to this padding — keep them in step. */}
+            <div className="min-w-0 bg-cream-deep border border-ink/10 px-6 md:px-10 py-8 md:py-12">
+              <p className="lg:hidden mb-8 border-b-2 border-ink/10 pb-5 text-[14px] text-ink/75">
+                Prefer to talk?{" "}
+                <a
+                  href={`tel:${primaryPhone.replace(/\s+/g, "")}`}
+                  className="link-rule font-bold text-oxblood whitespace-nowrap"
+                >
+                  Call {primaryPhone}
+                </a>
+              </p>
               <BookingForm />
             </div>
 
-            <aside className="space-y-8">
+            <aside className="space-y-8 px-2 sm:px-0">
               <div>
                 <h3 className="caps-track text-[11px] text-oxblood mb-3">
                   Opening Hours
                 </h3>
-                <ul className="space-y-1.5 text-[14px] text-ink/85">
+                <ul className="space-y-2 text-[15px] lg:text-[14px] text-ink/85">
                   {hours.weekly.map((d) => (
                     <li key={d.day} className="flex justify-between gap-4">
                       <span className="font-display">{d.day}</span>
                       <span className="text-right text-ink/70">
-                        {d.times}
+                        {d.times.split(" · ").map((session) => (
+                          <span key={session} className="block whitespace-nowrap">
+                            {session}
+                          </span>
+                        ))}
                       </span>
                     </li>
                   ))}

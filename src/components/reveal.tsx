@@ -148,7 +148,9 @@ export function RevealItem({
 
 /**
  * Vertical parallax wrapper. Translates the child by `distance` pixels as
- * the surrounding element scrolls through the viewport.
+ * the surrounding element scrolls through the viewport. The moving layer
+ * extends `distance` px above and below the frame, so a `fill` image inside
+ * it never exposes an edge — whatever the frame's aspect ratio.
  */
 export function Parallax({
   children,
@@ -172,8 +174,11 @@ export function Parallax({
   );
 
   return (
-    <div ref={ref} className={cn("overflow-hidden", className)}>
-      <motion.div style={{ y }} className="h-full w-full">
+    <div ref={ref} className={cn("relative overflow-hidden", className)}>
+      <motion.div
+        style={{ y, top: -distance, bottom: -distance }}
+        className="absolute inset-x-0"
+      >
         {children}
       </motion.div>
     </div>

@@ -1,7 +1,13 @@
 "use client";
 
+import { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { contact, hours, legalLinks, navLinks, siteInfo, socials } from "@/lib/content";
+import { isValidEmail } from "@/lib/booking";
+import { postJson } from "@/lib/post-json";
+
+type SubscribeStatus = "idle" | "submitting" | "done" | "error";
 
 /**
  * Newsletter + footer. Cream-deep background, centred newsletter, three
@@ -9,6 +15,39 @@ import { contact, hours, legalLinks, navLinks, siteInfo, socials } from "@/lib/c
  * Google icons, and a policy line.
  */
 export function NewsletterFooter() {
+  const [status, setStatus] = useState<SubscribeStatus>("idle");
+  const [message, setMessage] = useState<string | null>(null);
+
+  // Sign-ups arrive in the staff inbox (and the admin Messages list) via the
+  // contact endpoint, until a dedicated mailing-list tool is connected.
+  const onSubscribe = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (status === "submitting") return;
+    const data = new FormData(e.currentTarget);
+    const first = String(data.get("first") ?? "").trim();
+    const email = String(data.get("email") ?? "").trim();
+    if (!isValidEmail(email)) {
+      setStatus("error");
+      setMessage("Please enter a valid email address.");
+      return;
+    }
+    setStatus("submitting");
+    setMessage(null);
+    const result = await postJson("/api/contact", {
+      name: first || "Newsletter subscriber",
+      email,
+      subject: "Newsletter sign-up",
+      message: `Please add ${email} to the Maidenhead Spice mailing list for offers and news.`,
+      website: String(data.get("website") ?? ""),
+    });
+    if (result.ok) {
+      setStatus("done");
+    } else {
+      setStatus("error");
+      setMessage(`${result.error} Please try again in a moment.`);
+    }
+  };
+
   return (
     <footer className="bg-background border-t-[3px] border-ink">
       <div className="mx-auto max-w-[1100px] px-6 md:px-10 py-16 md:py-20">
@@ -22,27 +61,58 @@ export function NewsletterFooter() {
             occasional recipe — straight to your inbox.
           </p>
 
-          <form
-            className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-3 text-left"
-            onSubmit={(e) => e.preventDefault()}
-          >
-            <Field label="First name" name="first" />
-            <Field label="Email address" name="email" type="email" />
-            <p className="sm:col-span-2 text-[12px] text-ink/60 italic">
-              I consent to receive occasional emails about offers and events,
-              in line with the Maidenhead Spice{" "}
-              <Link href="/privacy" className="link-rule text-oxblood">
-                privacy policy
-              </Link>
-              .
-            </p>
-            <button
-              type="submit"
-              className="sm:col-span-2 caps-track inline-flex items-center justify-center border-[3px] border-ink bg-saffron px-7 h-11 text-[12px] font-bold text-ink hover:bg-saffron/90 [box-shadow:var(--shadow-brutal-sm)] hover:-translate-x-[1px] hover:-translate-y-[1px] transition-all"
+          {status === "done" ? (
+            <p
+              role="status"
+              className="mt-8 brutal-card-sm px-5 py-6 font-display text-[18px] text-ink"
             >
-              Subscribe
-            </button>
-          </form>
+              You are on the list — thank you. Look out for our next offer.
+            </p>
+          ) : (
+            <form
+              className="relative mt-8 grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-3 text-left"
+              onSubmit={onSubscribe}
+              noValidate
+            >
+              <Field label="First name" name="first" autoComplete="given-name" />
+              <Field
+                label="Email address"
+                name="email"
+                type="email"
+                autoComplete="email"
+                inputMode="email"
+              />
+              <p className="sm:col-span-2 text-[12px] text-ink/60 italic">
+                I consent to receive occasional emails about offers and events,
+                in line with the Maidenhead Spice{" "}
+                <Link href="/privacy" className="link-rule text-oxblood">
+                  privacy policy
+                </Link>
+                .
+              </p>
+              <button
+                type="submit"
+                disabled={status === "submitting"}
+                className="sm:col-span-2 caps-track inline-flex items-center justify-center border-[3px] border-ink bg-saffron px-7 h-12 text-[12px] font-bold text-ink hover:bg-saffron/90 [box-shadow:var(--shadow-brutal-sm)] hover:-translate-x-[1px] hover:-translate-y-[1px] transition-all disabled:cursor-wait disabled:opacity-60"
+              >
+                {status === "submitting" ? "Subscribing…" : "Subscribe"}
+              </button>
+              {message ? (
+                <p role="alert" className="sm:col-span-2 text-[14px] font-bold text-destructive">
+                  {message}
+                </p>
+              ) : null}
+              {/* Honeypot — hidden from humans, filled by bots */}
+              <input
+                type="text"
+                name="website"
+                tabIndex={-1}
+                autoComplete="off"
+                aria-hidden="true"
+                className="absolute left-[-9999px] h-0 w-0 opacity-0"
+              />
+            </form>
+          )}
         </div>
 
         <div className="mt-16 grid gap-10 sm:grid-cols-2 lg:grid-cols-4 border-t-[3px] border-ink pt-12">
@@ -126,7 +196,13 @@ export function NewsletterFooter() {
 
         <div className="mt-16 flex flex-col md:flex-row md:items-end md:justify-between gap-8 border-t-[3px] border-ink pt-10">
           <div>
-            <p className="font-display text-[18px] italic text-ink">
+            <Image
+              src="/brand/logo.svg"
+              alt={siteInfo.name}
+              width={224}
+              height={40}
+            />
+            <p className="mt-3 font-display text-[18px] italic text-ink">
               From our Kitchen to your table.
             </p>
             <p className="mt-2 text-[12px] text-ink/60">
@@ -150,7 +226,7 @@ export function NewsletterFooter() {
             <p className="caps-track-tight text-[11px] font-bold text-ink">
               Find us online
             </p>
-            <ul className="flex items-center gap-4">
+            <ul className="flex flex-wrap items-center gap-2 sm:gap-3 md:gap-4">
               {socials.map((s) => (
                 <li key={s.label}>
                   <Link
@@ -158,7 +234,7 @@ export function NewsletterFooter() {
                     target="_blank"
                     rel="noreferrer"
                     aria-label={s.label}
-                    className="inline-flex size-10 items-center justify-center border-[2px] border-ink text-ink hover:bg-ink hover:text-background transition-colors"
+                    className="inline-flex size-9 sm:size-10 items-center justify-center border-[2px] border-ink text-ink hover:bg-ink hover:text-background transition-colors"
                   >
                     <SocialIcon name={s.label} />
                   </Link>
@@ -177,11 +253,15 @@ function Field({
   name,
   type = "text",
   placeholder,
+  autoComplete,
+  inputMode,
 }: {
   label: string;
   name: string;
   type?: string;
   placeholder?: string;
+  autoComplete?: string;
+  inputMode?: React.HTMLAttributes<HTMLInputElement>["inputMode"];
 }) {
   return (
     <label className="flex flex-col gap-1.5">
@@ -190,7 +270,9 @@ function Field({
         type={type}
         name={name}
         placeholder={placeholder}
-        className="bg-transparent border-0 border-b-[3px] border-ink px-0 h-10 text-[15px] text-ink placeholder:italic placeholder:text-ink/40 focus:outline-none focus:border-saffron"
+        autoComplete={autoComplete}
+        inputMode={inputMode}
+        className="bg-transparent border-0 border-b-[3px] border-ink px-0 h-11 text-[16px] text-ink placeholder:italic placeholder:text-ink/40 focus:outline-none focus:border-saffron"
       />
     </label>
   );

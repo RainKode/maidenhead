@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   getCartLineCount,
@@ -18,6 +18,9 @@ import {
 } from "@/lib/order-pricing";
 import { cn } from "@/lib/utils";
 import { TimeSlotPicker, orderTimeSlots } from "@/components/order/time-slot-picker";
+import { SAME_DAY_NOTICE_MINUTES, addDays, toMinutes } from "@/lib/booking";
+import { postJson } from "@/lib/post-json";
+import { useRestaurantClock } from "@/hooks/use-restaurant-clock";
 
 type Status = "idle" | "submitting" | "error";
 
@@ -26,10 +29,6 @@ const orderTypes: { id: OrderType; label: string }[] = [
   { id: "delivery", label: "Delivery" },
   { id: "dine-in", label: "Dine-in" },
 ];
-
-function todayIso() {
-  return new Date().toISOString().split("T")[0];
-}
 
 export function CheckoutForm() {
   const router = useRouter();
@@ -42,8 +41,10 @@ export function CheckoutForm() {
   const setDeliveryZone = useCartStore((state) => state.setDeliveryZone);
   const setDeliveryAddress = useCartStore((state) => state.setDeliveryAddress);
   const setScheduledFor = useCartStore((state) => state.setScheduledFor);
-  const [date, setDate] = useState("");
-  const [time, setTime] = useState("");
+  const clock = useRestaurantClock();
+  // Empty until the guest picks one; the defaults below fill the gap.
+  const [pickedDate, setPickedDate] = useState("");
+  const [pickedTime, setPickedTime] = useState("");
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState<string | null>(null);
 
@@ -52,11 +53,16 @@ export function CheckoutForm() {
   const total = subtotal + deliveryFee;
   const lineCount = getCartLineCount(lines);
   const deliveryBlocked = orderType === "delivery" && subtotal < DELIVERY_MINIMUM;
-
-  useEffect(() => {
-    setDate(todayIso());
-    setTime(orderTimeSlots[0] ?? "");
-  }, []);
+  // Default to the soonest slot: today if any are left, otherwise tomorrow.
+  // Same-day slots inside the notice period are never offered.
+  const today = clock?.date ?? "";
+  const sameDayCutoff = clock ? clock.minutes + SAME_DAY_NOTICE_MINUTES : 0;
+  const slotsLeftToday = orderTimeSlots.some((slot) => toMinutes(slot) >= sameDayCutoff);
+  const defaultDate = clock ? (slotsLeftToday ? today : addDays(today, 1)) : "";
+  const date = pickedDate || defaultDate;
+  const earliestMinutes = date && date === today ? sameDayCutoff : 0;
+  const availableSlots = orderTimeSlots.filter((slot) => toMinutes(slot) >= earliestMinutes);
+  const time = availableSlots.includes(pickedTime) ? pickedTime : (availableSlots[0] ?? "");
 
   const submitLabel = useMemo(() => {
     if (status === "submitting") return "Sending order...";
@@ -75,6 +81,10 @@ export function CheckoutForm() {
     }
     if (deliveryBlocked) {
       setError(`Delivery orders need a food subtotal of at least ${formatPrice(DELIVERY_MINIMUM)}.`);
+      return;
+    }
+    if (!date || !time) {
+      setError("Please choose a date and time for your order.");
       return;
     }
 
@@ -114,21 +124,21 @@ export function CheckoutForm() {
     };
 
     setStatus("submitting");
-    try {
-      const response = await fetch("/api/order", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-      const result = (await response.json()) as { ok?: boolean; ref?: string; error?: string };
-      if (!response.ok || !result.ok || !result.ref) {
-        throw new Error(result.error ?? "Order request failed");
-      }
+    const result = await postJson<{ ref?: string }>("/api/order", payload);
+    if (!result.ok || !result.data.ref) {
+      setStatus("error");
+      setError(
+        `${result.ok ? "Sorry, something went wrong on our side." : result.error} Please try again, or call us on 01628 670670.`
+      );
+      return;
+    }
 
+    const { ref } = result.data;
+    try {
       localStorage.setItem(
         "ms-last-order",
         JSON.stringify({
-          ref: result.ref,
+          ref,
           orderType,
           requestedFor: { date, time },
           lineCount,
@@ -136,12 +146,11 @@ export function CheckoutForm() {
           lines,
         })
       );
-      clear();
-      router.push(`/order/confirmed?ref=${encodeURIComponent(result.ref)}`);
-    } catch (err) {
-      setStatus("error");
-      setError(err instanceof Error ? err.message : "Something went wrong. Please call us instead.");
+    } catch {
+      // Private browsing can block storage; the confirmation page copes.
     }
+    clear();
+    router.push(`/order/confirmed?ref=${encodeURIComponent(ref)}`);
   };
 
   return (
@@ -182,13 +191,13 @@ export function CheckoutForm() {
               type="date"
               name="date"
               required
-              min={todayIso()}
+              min={today || undefined}
               value={date}
-              onChange={(event) => setDate(event.target.value)}
-              className="h-10 border-0 border-b-[3px] border-ink bg-transparent px-0 text-[15px] text-ink outline-none focus:border-saffron"
+              onChange={(event) => setPickedDate(event.target.value)}
+              className="h-10 border-0 border-b-[3px] border-ink bg-transparent px-0 text-[16px] text-ink outline-none focus:border-saffron"
             />
           </label>
-          <TimeSlotPicker name="time" value={time} onChange={setTime} required />
+          <TimeSlotPicker name="time" value={time} onChange={setPickedTime} earliestMinutes={earliestMinutes} required />
         </div>
 
         {orderType === "delivery" ? (
@@ -202,7 +211,7 @@ export function CheckoutForm() {
                   name="deliveryZone"
                   value={deliveryZone}
                   onChange={(event) => setDeliveryZone(event.target.value as DeliveryZone)}
-                  className="h-10 appearance-none border-0 border-b-[3px] border-ink bg-transparent px-0 text-[15px] text-ink outline-none focus:border-saffron"
+                  className="h-10 appearance-none border-0 border-b-[3px] border-ink bg-transparent px-0 text-[16px] text-ink outline-none focus:border-saffron"
                 >
                   {deliveryZones.map((zone) => (
                     <option key={zone.id} value={zone.id}>
@@ -221,7 +230,7 @@ export function CheckoutForm() {
             <select
               name="partySize"
               required
-              className="h-10 appearance-none border-0 border-b-[3px] border-ink bg-transparent px-0 text-[15px] text-ink outline-none focus:border-saffron"
+              className="h-10 appearance-none border-0 border-b-[3px] border-ink bg-transparent px-0 text-[16px] text-ink outline-none focus:border-saffron"
             >
               <option value="">Choose...</option>
               {Array.from({ length: 12 }, (_, index) => index + 1).map((value) => (
@@ -239,7 +248,7 @@ export function CheckoutForm() {
             name="notes"
             rows={3}
             maxLength={400}
-            className="resize-none border-[3px] border-ink bg-transparent px-3 py-2 text-[15px] text-ink outline-none focus:outline-[3px] focus:outline-saffron [box-shadow:var(--shadow-brutal-sm)]"
+            className="resize-none border-[3px] border-ink bg-transparent px-3 py-2 text-[16px] text-ink outline-none focus:outline-[3px] focus:outline-saffron [box-shadow:var(--shadow-brutal-sm)]"
           />
         </label>
 
@@ -295,7 +304,7 @@ function Field({
         type={type}
         name={name}
         required={required}
-        className="h-10 border-0 border-b-[3px] border-ink bg-transparent px-0 text-[15px] text-ink outline-none focus:border-saffron"
+        className="h-10 border-0 border-b-[3px] border-ink bg-transparent px-0 text-[16px] text-ink outline-none focus:border-saffron"
       />
     </label>
   );

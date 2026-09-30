@@ -63,7 +63,7 @@ export function OurStorySection() {
                     alt="Tufted cream banquette seating with tables set for dinner at Maidenhead Spice"
                     fill
                     sizes="(min-width: 768px) 360px, 100vw"
-                    className="object-cover scale-[1.12]"
+                    className="object-cover"
                   />
                 </Parallax>
               </div>

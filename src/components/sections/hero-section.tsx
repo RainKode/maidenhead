@@ -44,12 +44,13 @@ export function HeroSection() {
   const eased = 1 - Math.pow(1 - progress, 2);
   const scale = 0.78 + 0.22 * eased; // 0.78 → 1.0
   const radius = 28 * (1 - eased); // 28px → 0px
-  const overlay = 0.15 + 0.45 * eased; // dim grows as it fills
+  const overlay = 0.3 + 0.35 * eased; // dim grows as it fills
 
   return (
     <section className="relative bg-ink text-background">
-      <div ref={wrapRef} className="relative h-[160vh]">
-        <div className="sticky top-0 h-screen w-full overflow-hidden bg-[rgb(21,21,21)]">
+      {/* svh, not vh: iOS toolbars would otherwise push the quote off-centre */}
+      <div ref={wrapRef} className="relative h-[160svh]">
+        <div className="sticky top-0 h-svh w-full overflow-hidden bg-[rgb(21,21,21)]">
           <div
             className="absolute inset-0 m-auto h-full w-full overflow-hidden will-change-transform"
             style={{
@@ -60,10 +61,12 @@ export function HeroSection() {
           >
             <video
               src="/videos/hero.mp4"
+              poster="/videos/hero-poster.jpg"
               autoPlay
               muted
               loop
               playsInline
+              aria-hidden="true"
               className="absolute inset-0 h-full w-full object-cover"
             />
             <div
@@ -75,11 +78,12 @@ export function HeroSection() {
             />
           </div>
 
-          <div className="relative z-10 h-full flex items-center justify-center px-6">
+          {/* Side padding keeps the quote inside the media while it is scaled down (78% width on phones). */}
+          <div className="relative z-10 h-full flex items-center justify-center px-[calc(11vw+1rem)] md:px-6">
             <blockquote
-              className="max-w-3xl text-center font-display italic text-cream leading-[1.25] tracking-[0.01em]"
+              className="max-w-3xl text-center font-display italic text-cream leading-[1.3] tracking-[0.01em] [text-shadow:0_2px_16px_rgb(0_0_0/0.6)]"
               style={{
-                opacity: 0.4 + 0.6 * eased,
+                opacity: 0.85 + 0.15 * eased,
                 transform: `translateY(${(1 - eased) * 16}px)`,
                 fontSize: "clamp(22px, 3.4vw, 40px)",
               }}

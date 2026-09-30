@@ -9,17 +9,15 @@ import { Parallax, Reveal } from "../reveal";
 export function AmbienceSection() {
   return (
     <section id="ambience" className="bg-cream">
-        <div className="relative h-[64vh] min-h-[420px] max-h-[640px] w-full overflow-hidden brutal-frame">
+      <div className="relative h-[64vh] min-h-[420px] max-h-[640px] w-full overflow-hidden brutal-frame">
         <Parallax distance={120} className="absolute inset-0">
-          <div className="relative h-[120%] w-full -mt-[10%]">
-            <Image
-              src="/images/ambience/IMG-20251030-WA0008.jpg"
-              alt="The Maidenhead Spice dining room — bar, chandeliers and warm amber light"
-              fill
-              sizes="100vw"
-              className="object-cover"
-            />
-          </div>
+          <Image
+            src="/images/ambience/IMG-20251030-WA0008.jpg"
+            alt="The Maidenhead Spice dining room — bar, chandeliers and warm amber light"
+            fill
+            sizes="100vw"
+            className="object-cover"
+          />
         </Parallax>
         <div aria-hidden className="absolute inset-0 bg-oxblood-dark/45" />
         <div className="absolute inset-0 flex items-center justify-center px-6">

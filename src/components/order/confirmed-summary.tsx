@@ -19,9 +19,9 @@ export function ConfirmedSummary({ refFromQuery }: { refFromQuery?: string }) {
 
   useEffect(() => {
     const timeout = window.setTimeout(() => {
-      const raw = localStorage.getItem("ms-last-order");
-      if (!raw) return;
       try {
+        const raw = localStorage.getItem("ms-last-order");
+        if (!raw) return;
         setOrder(JSON.parse(raw) as LastOrder);
       } catch {
         setOrder(null);

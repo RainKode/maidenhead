@@ -82,7 +82,7 @@ export function MenuBrowse({ categories }: Props) {
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
                 placeholder="Search dishes"
-                className="h-11 w-full border-[3px] border-ink bg-background pl-10 pr-4 text-[15px] text-ink outline-none transition-colors placeholder:text-ink/45 focus:outline-[3px] focus:outline-saffron [box-shadow:var(--shadow-brutal-sm)]"
+                className="h-11 w-full border-[3px] border-ink bg-background pl-10 pr-4 text-[16px] text-ink outline-none transition-colors placeholder:text-ink/45 focus:outline-[3px] focus:outline-saffron [box-shadow:var(--shadow-brutal-sm)]"
               />
             </label>
 

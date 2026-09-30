@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import {
@@ -116,6 +116,9 @@ export const useCartStore = create<CartState>()(
     {
       name: "ms-cart-v1",
       storage: createJSONStorage(() => localStorage),
+      // Loaded after mount (see useCartHydrated) so the first client render
+      // matches the server's empty cart instead of causing a hydration error.
+      skipHydration: true,
       partialize: (state) => ({
         lines: state.lines,
         orderType: state.orderType,
@@ -127,20 +130,26 @@ export const useCartStore = create<CartState>()(
   )
 );
 
-function getPersistHydrated(): boolean {
-  return typeof window !== "undefined" && useCartStore.persist?.hasHydrated?.() === true;
+let rehydrateRequested = false;
+
+function subscribeToHydration(onChange: () => void) {
+  const unsubscribe = useCartStore.persist.onFinishHydration(onChange);
+  if (!rehydrateRequested) {
+    rehydrateRequested = true;
+    void useCartStore.persist.rehydrate();
+  }
+  return unsubscribe;
 }
 
+/**
+ * False on the server and during hydration, true once the saved cart has
+ * been read. The first subscriber (the cart button, mounted on every page)
+ * triggers the read.
+ */
 export function useCartHydrated(): boolean {
-  const [hydrated, setHydrated] = useState(getPersistHydrated);
-
-  useEffect(() => {
-    if (getPersistHydrated()) {
-      queueMicrotask(() => setHydrated(true));
-    }
-    const unsubscribe = useCartStore.persist?.onFinishHydration?.(() => setHydrated(true));
-    return () => unsubscribe?.();
-  }, []);
-
-  return hydrated;
+  return useSyncExternalStore(
+    subscribeToHydration,
+    () => useCartStore.persist.hasHydrated(),
+    () => false
+  );
 }

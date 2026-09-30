@@ -19,12 +19,12 @@ export function FinalCtaSection() {
         <RevealStagger
           delay={0.15}
           stagger={0.1}
-          className="mt-10 flex flex-wrap items-center justify-center gap-3 md:gap-4"
+          className="mx-auto mt-10 flex max-w-[300px] flex-col items-stretch gap-4 sm:max-w-none sm:flex-row sm:flex-wrap sm:items-center sm:justify-center md:gap-4"
         >
           <RevealItem>
             <Link
               href={ctaLinks.menus}
-              className="caps-track inline-flex items-center justify-center border-[3px] border-background px-7 h-11 text-[12px] font-bold text-background hover:bg-background hover:text-ink transition-colors [box-shadow:5px_5px_0_var(--saffron)] hover:-translate-x-[1px] hover:-translate-y-[1px]"
+              className="caps-track flex w-full sm:inline-flex sm:w-auto items-center justify-center border-[3px] border-background px-7 h-12 sm:h-11 text-[12px] font-bold text-background hover:bg-background hover:text-ink transition-colors [box-shadow:5px_5px_0_var(--saffron)] hover:-translate-x-[1px] hover:-translate-y-[1px]"
             >
               View Menu
             </Link>
@@ -32,7 +32,7 @@ export function FinalCtaSection() {
           <RevealItem>
             <Link
               href={ctaLinks.order}
-              className="caps-track inline-flex items-center justify-center border-[3px] border-ink bg-saffron px-7 h-11 text-[12px] font-bold text-ink hover:bg-saffron/90 transition-colors [box-shadow:var(--shadow-brutal-sm)] hover:-translate-x-[1px] hover:-translate-y-[1px]"
+              className="caps-track flex w-full sm:inline-flex sm:w-auto items-center justify-center border-[3px] border-ink bg-saffron px-7 h-12 sm:h-11 text-[12px] font-bold text-ink hover:bg-saffron/90 transition-colors [box-shadow:var(--shadow-brutal-sm)] hover:-translate-x-[1px] hover:-translate-y-[1px]"
             >
               Order Online
             </Link>
@@ -40,7 +40,7 @@ export function FinalCtaSection() {
           <RevealItem>
             <Link
               href={ctaLinks.book}
-              className="caps-track inline-flex items-center justify-center border-[3px] border-background bg-ink px-7 h-11 text-[12px] font-bold text-background hover:bg-ink/80 transition-colors [box-shadow:5px_5px_0_var(--saffron)] hover:-translate-x-[1px] hover:-translate-y-[1px]"
+              className="caps-track flex w-full sm:inline-flex sm:w-auto items-center justify-center border-[3px] border-background bg-ink px-7 h-12 sm:h-11 text-[12px] font-bold text-background hover:bg-ink/80 transition-colors [box-shadow:5px_5px_0_var(--saffron)] hover:-translate-x-[1px] hover:-translate-y-[1px]"
             >
               Book a Table
             </Link>

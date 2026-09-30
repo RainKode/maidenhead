@@ -1,10 +1,9 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Merienda, Lato, Geist_Mono } from "next/font/google";
-import Script from "next/script";
 import "./globals.css";
 import { CartButton } from "@/components/cart/cart-button";
 import { CookieBanner } from "@/components/cookie-banner";
-import { siteInfo, contact } from "@/lib/content";
+import { siteInfo, contact, hours } from "@/lib/content";
 
 const merienda = Merienda({
   variable: "--font-heading",
@@ -26,6 +25,10 @@ const mono = Geist_Mono({
   display: "swap",
 });
 
+// Link previews: the share image and favicon come from the files in this
+// folder (opengraph-image.jpg, icon.svg, favicon.ico, apple-icon.png). Title
+// and description are deliberately left out of openGraph/twitter so every
+// page's own title and description are used when it is shared.
 export const metadata: Metadata = {
   metadataBase: new URL(siteInfo.url),
   title: {
@@ -33,19 +36,20 @@ export const metadata: Metadata = {
     template: `%s · ${siteInfo.name}`,
   },
   description: siteInfo.description,
+  applicationName: siteInfo.name,
+  appleWebApp: { title: siteInfo.name },
   openGraph: {
-    title: `${siteInfo.name} — ${siteInfo.tagline}`,
-    description: siteInfo.description,
-    url: siteInfo.url,
     siteName: siteInfo.name,
     locale: "en_GB",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: siteInfo.name,
-    description: siteInfo.description,
   },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#fbfbfe",
 };
 
 const jsonLd = {
@@ -66,35 +70,18 @@ const jsonLd = {
     postalCode: contact.postcode,
     addressCountry: "GB",
   },
-  openingHoursSpecification: [
-    {
+  openingHoursSpecification: hours.weekly.flatMap((d) =>
+    d.sessions.map(([opens, closes]) => ({
       "@type": "OpeningHoursSpecification",
-      dayOfWeek: [
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday",
-        "Saturday",
-        "Sunday",
-      ],
-      opens: "17:30",
-      closes: "22:30",
-    },
-    {
-      "@type": "OpeningHoursSpecification",
-      dayOfWeek: ["Wednesday", "Thursday", "Saturday"],
-      opens: "12:00",
-      closes: "14:00",
-    },
-    {
-      "@type": "OpeningHoursSpecification",
-      dayOfWeek: "Sunday",
-      opens: "12:00",
-      closes: "15:00",
-    },
-  ],
+      dayOfWeek: d.day,
+      opens,
+      closes,
+    }))
+  ),
+  image: `${siteInfo.url}/opengraph-image.jpg`,
+  logo: `${siteInfo.url}/brand/icon-512.png`,
   hasMenu: `${siteInfo.url}/menus`,
+  acceptsReservations: `${siteInfo.url}/book`,
 };
 
 export default function RootLayout({
@@ -111,10 +98,11 @@ export default function RootLayout({
         {children}
         <CartButton />
         <CookieBanner />
-        <Script
-          id="ld-restaurant"
+        <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
+          }}
         />
       </body>
     </html>

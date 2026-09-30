@@ -21,8 +21,8 @@ export function PageHero({
     <section
       className={
         isOx
-          ? "bg-ink text-background py-20 md:py-28 border-b-[3px] border-saffron"
-          : "bg-background text-ink py-20 md:py-28 border-b-[3px] border-ink"
+          ? "bg-ink text-background py-14 md:py-28 border-b-[3px] border-saffron"
+          : "bg-background text-ink py-14 md:py-28 border-b-[3px] border-ink"
       }
     >
       <div className="mx-auto max-w-[1100px] px-6 md:px-10 text-center">
@@ -39,7 +39,7 @@ export function PageHero({
         ) : null}
         <h1
           className={
-            "mt-4 font-display text-[34px] md:text-[52px] lg:text-[60px] leading-[1.05] uppercase tracking-[0.03em] " +
+            "mt-4 font-display text-[34px] md:text-[52px] lg:text-[60px] leading-[1.15] uppercase tracking-[0.03em] text-balance " +
             (isOx ? "text-background" : "text-ink")
           }
         >
@@ -48,14 +48,14 @@ export function PageHero({
         {subtitle ? (
           <p
             className={
-              "mt-6 mx-auto max-w-2xl font-body italic text-[18px] md:text-[20px] " +
+              "mt-5 md:mt-6 mx-auto max-w-2xl font-body italic text-[17px] md:text-[20px] text-pretty " +
               (isOx ? "text-background/85" : "text-ink/80")
             }
           >
             {subtitle}
           </p>
         ) : null}
-        <div className="brutal-divider mx-auto mt-10" />
+        <div className="brutal-divider mx-auto mt-8 md:mt-10" />
       </div>
     </section>
   );

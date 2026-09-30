@@ -1,16 +1,20 @@
 import { NextResponse } from "next/server";
 import {
   sendMail,
-  isValidEmail,
   isNonEmpty,
   renderBookingStaffEmail,
   renderBookingCustomerEmail,
   type BookingPayload,
 } from "@/lib/mail";
 import { createReservation } from "@/lib/data/reservations";
+import { restaurantNow, validateBooking } from "@/lib/booking";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+
+// A slot that was on screen when the guest picked it stays valid for a
+// little while, so a slow form-filler isn't bounced at submit.
+const SLOT_GRACE_MS = 15 * 60_000;
 
 export async function POST(request: Request) {
   let body: Record<string, unknown>;
@@ -25,29 +29,19 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: true });
   }
 
-  // Required field validation
-  const { name, phone, email, date, time, party } = body;
-  if (
-    !isNonEmpty(name) ||
-    !isNonEmpty(phone) ||
-    !isNonEmpty(email) ||
-    !isNonEmpty(date) ||
-    !isNonEmpty(time) ||
-    !isNonEmpty(party)
-  ) {
-    return NextResponse.json({ ok: false, error: "Missing required fields" }, { status: 400 });
-  }
-  if (!isValidEmail(email)) {
-    return NextResponse.json({ ok: false, error: "Invalid email address" }, { status: 400 });
+  // Same rules the form applies — errors here are shown to the guest as-is.
+  const invalid = validateBooking(body, restaurantNow(new Date(Date.now() - SLOT_GRACE_MS)));
+  if (invalid) {
+    return NextResponse.json({ ok: false, error: invalid }, { status: 400 });
   }
 
   const payload: BookingPayload = {
-    name: name.trim(),
-    phone: phone.trim(),
-    email: email.trim(),
-    date: date.trim(),
-    time: time.trim(),
-    party: String(party).trim(),
+    name: String(body.name).trim(),
+    phone: String(body.phone).trim(),
+    email: String(body.email).trim(),
+    date: String(body.date).trim(),
+    time: String(body.time).trim(),
+    party: String(Number(body.party)),
     notes: isNonEmpty(body.notes) ? body.notes.trim() : undefined,
   };
 

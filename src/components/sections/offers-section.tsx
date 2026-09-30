@@ -18,7 +18,7 @@ export function OffersSection() {
             <p className="caps-track text-[12px] text-saffron mb-4">
               Offers at Maidenhead Spice
             </p>
-            <h2 className="font-display text-[34px] md:text-[48px] lg:text-[56px] leading-[1.05] uppercase tracking-[0.02em] text-background">
+            <h2 className="font-display text-[34px] md:text-[48px] lg:text-[56px] leading-[1.22] md:leading-[1.1] uppercase tracking-[0.02em] text-background">
               Great food, <span className="text-saffron italic normal-case">great</span> value
             </h2>
             <ul className="mt-6 flex flex-col gap-6 max-w-[52ch]">
@@ -61,11 +61,11 @@ export function OffersSection() {
             <div className="relative aspect-[4/5] overflow-hidden brutal-frame">
               <Parallax distance={70} className="absolute inset-0">
                 <Image
-                  src="/images/ambience/IMG-20251030-WA0016.jpg"
+                  src="/images/ambience/IMG-20251030-WA0028.jpg"
                   alt="Three curries laid out for a sharing feast at Maidenhead Spice"
                   fill
                   sizes="(min-width: 768px) 50vw, 100vw"
-                  className="object-cover scale-[1.12]"
+                  className="object-cover"
                 />
               </Parallax>
             </div>

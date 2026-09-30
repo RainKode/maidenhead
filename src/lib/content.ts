@@ -26,18 +26,27 @@ export const contact = {
     "https://www.google.com/maps?q=Maidenhead+Spice,+117+Bridge+Road,+Maidenhead+SL6+8NA&output=embed",
 } as const;
 
+// `times` is what guests read; `sessions` is the same thing in 24h form and
+// drives the booking time slots and the structured data — keep them in step.
 export const hours = {
   summary: "Open 7 days a week, including Bank Holidays",
   dinner: "5.30pm – 10.30pm",
   sundayBuffet: "Sunday Buffet · 12.00pm – 2.00pm",
   weekly: [
-    { day: "Monday", times: "5.30pm – 10.30pm" },
-    { day: "Tuesday", times: "5.30pm – 10.30pm" },
-    { day: "Wednesday", times: "5.30pm – 10.30pm" },
-    { day: "Thursday", times: "5.30pm – 10.30pm" },
-    { day: "Friday", times: "5.30pm – 11.00pm" },
-    { day: "Saturday", times: "5.30pm – 11.00pm" },
-    { day: "Sunday", times: "12.00pm – 2.00pm · 5.30pm – 10.30pm" },
+    { day: "Monday", times: "5.30pm – 10.30pm", sessions: [["17:30", "22:30"]] },
+    { day: "Tuesday", times: "5.30pm – 10.30pm", sessions: [["17:30", "22:30"]] },
+    { day: "Wednesday", times: "5.30pm – 10.30pm", sessions: [["17:30", "22:30"]] },
+    { day: "Thursday", times: "5.30pm – 10.30pm", sessions: [["17:30", "22:30"]] },
+    { day: "Friday", times: "5.30pm – 11.00pm", sessions: [["17:30", "23:00"]] },
+    { day: "Saturday", times: "5.30pm – 11.00pm", sessions: [["17:30", "23:00"]] },
+    {
+      day: "Sunday",
+      times: "12.00pm – 2.00pm · 5.30pm – 10.30pm",
+      sessions: [
+        ["12:00", "14:00"],
+        ["17:30", "22:30"],
+      ],
+    },
   ],
 } as const;
 
